@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyectoflowfree;
+import NIVELES.MapaNivelesBonito;
 import java.awt.*;
 import javax.swing.*;
 /**
@@ -34,7 +35,7 @@ public class MenuPrincipal extends JPanel {
         add(titulo, gbc);
 
         jugar = new JButton("Jugar");
-        jugar.addActionListener(e -> abrirJugar());
+        jugar.addActionListener(e -> abrirMapa());  // <-- Aquí ahora abre el mapa bonito
         gbc.gridy = 2;
         add(jugar, gbc);
 
@@ -54,16 +55,22 @@ public class MenuPrincipal extends JPanel {
         add(cerrarSesion, gbc);
     }
 
-    private void abrirJugar() {
-        JOptionPane.showMessageDialog(this, "Funcion de juego aun en desarrollo.");
+    private void abrirMapa() {
+      
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        frame.dispose();
+
+        SwingUtilities.invokeLater(() -> {
+            MapaNivelesBonito mapa = new MapaNivelesBonito();  
+            mapa.mostrarEnFrame();
+        });
     }
 
-   private void abrirVerPerfil() {
-    JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-    frame.dispose();
-    new VerPerfil().mostrarEnFrame();
-}
-
+    private void abrirVerPerfil() {
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        frame.dispose();
+        new VerPerfil().mostrarEnFrame();
+    }
 
     private void abrirReportes() {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);

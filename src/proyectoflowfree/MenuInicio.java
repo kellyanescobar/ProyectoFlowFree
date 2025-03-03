@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyectoflowfree;
+import NIVELES.MapaNivelesBonito;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.ImageIcon;
@@ -11,10 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.*;
 import javax.swing.*;
-/**
- *
- * @author laraj
- */
+
+
 public class MenuInicio extends JPanel {
     private JButton crearUsuario, iniciarSesion, salir;
     private JLabel icono, titulo;
@@ -32,7 +31,7 @@ public class MenuInicio extends JPanel {
         gbc.gridwidth = 2;
         add(icono, gbc);
 
-        titulo = new JLabel("Ajedrez Chino", SwingConstants.CENTER);
+        titulo = new JLabel("FREE FLOW", SwingConstants.CENTER);
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 16));
         gbc.gridy = 1;
         add(titulo, gbc);
@@ -79,7 +78,12 @@ public class MenuInicio extends JPanel {
         frame.setVisible(true);
     }
 
+ 
+  
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MenuInicio().mostrarEnFrame());
+         SwingUtilities.invokeLater(() -> new MenuInicio().mostrarEnFrame()); {
+            MapaNivelesBonito mapa = new MapaNivelesBonito();
+            mapa.mostrarEnFrame();
+    }
     }
 }
