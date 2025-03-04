@@ -3,87 +3,117 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyectoflowfree;
-import NIVELES.MapaNivelesBonito;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 
-
 public class MenuInicio extends JPanel {
-    private JButton crearUsuario, iniciarSesion, salir;
-    private JLabel icono, titulo;
+    private static JFrame frame;
+    private JButton iniciarSesion, crearUsuario, salir;
+    private Image fondoImagen;
 
     public MenuInicio() {
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        ImageIcon imagenIcono = cargarImagen("imagenes/Icono.jpeg");
-        icono = (imagenIcono != null) ? new JLabel(imagenIcono) : new JLabel("Imagen no encontrada");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        add(icono, gbc);
-
-        titulo = new JLabel("FREE FLOW", SwingConstants.CENTER);
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        gbc.gridy = 1;
-        add(titulo, gbc);
-
-        crearUsuario = new JButton("Crear Cuenta");
-        crearUsuario.addActionListener(e -> abrirCrearUsuario());
-        gbc.gridy = 2;
-        add(crearUsuario, gbc);
-
-        iniciarSesion = new JButton("Iniciar Sesión");
+        setLayout(null);
+        
+        fondoImagen=new ImageIcon(getClass().getResource("/imagenes/MenuInicio.png")).getImage(); 
+        
+        //boton Iniciar Secion
+        iniciarSesion=crearBoton("Iniciar Sesion", new Color(0xA2F255), new Color(0x026610));
+        iniciarSesion.setBounds(310, 230, 180, 50);
         iniciarSesion.addActionListener(e -> abrirIniciarSesion());
-        gbc.gridy = 3;
-        add(iniciarSesion, gbc);
+        add(iniciarSesion);
+        
+        //boton Craer Usuario
+        crearUsuario=crearBoton("Crear Usuario", new Color(0x0CC0DF), new Color(0x03579C));
+        crearUsuario.setBounds(310, 300, 180, 50);
+        crearUsuario.addActionListener(e -> abrirCrearUsuario());
+        add(crearUsuario);
 
-        salir = new JButton("Salir");
+        //boton Salir
+        salir=crearBoton("Salir", new Color(0xFFECF4), new Color(0xFA237F));
+        salir.setBounds(310, 370, 180, 50);
         salir.addActionListener(e -> System.exit(0));
-        gbc.gridy = 4;
-        add(salir, gbc);
+        add(salir);
     }
-
+    
+    private JButton crearBoton(String texto, Color bgColor, Color fgColor) {
+        JButton boton=new JButton(texto);
+        boton.setFont(new Font("Pixel Font", Font.BOLD, 18));
+        boton.setForeground(fgColor);
+        boton.setBackground(bgColor);
+        boton.setBorderPainted(false);
+        boton.setFocusPainted(false);
+        boton.setContentAreaFilled(true);
+        
+        boton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setBackground(bgColor.darker());
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setBackground(bgColor);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+                boton.setBackground(bgColor.darker().darker());
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                boton.setBackground(bgColor.darker());
+            }
+        });
+        
+        return boton;
+    }
+    
     private void abrirCrearUsuario() {
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        frame.dispose();
+        frame.setVisible(false);
         new CrearCuenta().mostrarEnFrame();
     }
-
+    
     private void abrirIniciarSesion() {
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        frame.dispose();
+        frame.setVisible(false);
         new IniciarSesion().mostrarEnFrame();
     }
-
-    private ImageIcon cargarImagen(String ruta) {
-        java.net.URL imgURL = getClass().getClassLoader().getResource(ruta);
-        return (imgURL != null) ? new ImageIcon(imgURL) : new ImageIcon();
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(fondoImagen, 0, 0, getWidth(), getHeight(), this);
     }
-
+    
     public void mostrarEnFrame() {
-        JFrame frame = new JFrame("Pantalla Inicial");
+        if(frame==null){
+        frame=new JFrame("Menu Inicio");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this);
-        frame.pack();
+        frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        frame.addWindowListener(new WindowAdapter() {
+    
+    @Override
+    public void windowActivated(WindowEvent e) {
+        frame.setLocationRelativeTo(null); 
+    }
+});
+      }else{
+            frame.setVisible(true);
+            frame.toFront();
+        }
     }
 
- 
-  
     public static void main(String[] args) {
-         SwingUtilities.invokeLater(() -> new MenuInicio().mostrarEnFrame()); {
-            MapaNivelesBonito mapa = new MapaNivelesBonito();
-            mapa.mostrarEnFrame();
-    }
+        SwingUtilities.invokeLater(() -> new MenuInicio().mostrarEnFrame());
     }
 }
