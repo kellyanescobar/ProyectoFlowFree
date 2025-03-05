@@ -5,6 +5,10 @@
 package proyectoflowfree;
 import NIVELES.MapaNivelesBonito;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 /**
  *
@@ -12,54 +16,90 @@ import javax.swing.*;
  */
 public class MenuPrincipal extends JPanel {
     private JButton jugar, verPerfil, reportes, cerrarSesion;
-    private JLabel icono, titulo;
+    private Image fondoImagen;
     private Login log;
 
     public MenuPrincipal(Login log) {
-        this.log = log;
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        ImageIcon imagenIcono = cargarImagen("imagenes/Icono.jpeg");
-        icono = (imagenIcono != null) ? new JLabel(imagenIcono) : new JLabel("Imagen no encontrada");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        add(icono, gbc);
-
-        titulo = new JLabel("Menu Principal", SwingConstants.CENTER);
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        gbc.gridy = 1;
-        add(titulo, gbc);
-
-        jugar = new JButton("Jugar");
-        jugar.addActionListener(e -> abrirMapa());  // <-- Aquí ahora abre el mapa bonito
-        gbc.gridy = 2;
-        add(jugar, gbc);
-
-        verPerfil = new JButton("Ver Perfil");
+        this.log=log;
+        setLayout(null);
+        
+        fondoImagen=new ImageIcon(getClass().getResource("/imagenes/MenuPrincipal.png")).getImage(); 
+        
+        jugar = crearBoton("Jugar", new Color(0xFBD2FF), new Color(0xC700FF));
+        verPerfil = crearBoton("Ver Perfil", new Color(0xFAC9DE), new Color(0xE61F93));
+        reportes = crearBoton("Reportes", new Color(0xC8FFF7), new Color(0x00B7E7));
+        cerrarSesion = crearBoton("Cerrar Sesion", new Color(0xF6B0A4), new Color(0xEA5923));
+        
+        add(jugar);
+        add(verPerfil);
+        add(reportes);
+        add(cerrarSesion);
+        
+        jugar.addActionListener(e -> abrirMapa());
         verPerfil.addActionListener(e -> abrirVerPerfil());
-        gbc.gridy = 3;
-        add(verPerfil, gbc);
-
-        reportes = new JButton("Reportes");
         reportes.addActionListener(e -> abrirReportes());
-        gbc.gridy = 4;
-        add(reportes, gbc);
-
-        cerrarSesion = new JButton("Cerrar Sesion");
         cerrarSesion.addActionListener(e -> cerrarSesion());
-        gbc.gridy = 5;
-        add(cerrarSesion, gbc);
+        
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                reubicarBotones();
+            }
+        });
     }
-
+    
+    private void reubicarBotones() {
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
+        int buttonWidth = 180;
+        int buttonHeight = 50;
+        int centerX = (panelWidth - buttonWidth) / 2;
+        int startY = panelHeight / 3;
+        int spacing = 70;
+        
+        jugar.setBounds(centerX, startY, buttonWidth, buttonHeight);
+        verPerfil.setBounds(centerX, startY + spacing, buttonWidth, buttonHeight);
+        reportes.setBounds(centerX, startY + 2 * spacing, buttonWidth, buttonHeight);
+        cerrarSesion.setBounds(centerX, startY + 3 * spacing, buttonWidth, buttonHeight);
+    }
+    
+    private JButton crearBoton(String texto, Color bgColor, Color fgColor) {
+        JButton boton = new JButton(texto);
+        boton.setFont(new Font("Pixel Font", Font.BOLD, 18));
+        boton.setForeground(fgColor);
+        boton.setBackground(bgColor);
+        boton.setBorderPainted(false);
+        boton.setFocusPainted(false);
+        boton.setContentAreaFilled(true);
+        
+        boton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setBackground(bgColor.darker());
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setBackground(bgColor);
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
+                boton.setBackground(bgColor.darker().darker());
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                boton.setBackground(bgColor.darker());
+            }
+        });
+        
+        return boton;
+    }
+    
     private void abrirMapa() {
-      
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         frame.dispose();
-
         SwingUtilities.invokeLater(() -> {
             MapaNivelesBonito mapa = new MapaNivelesBonito();  
             mapa.mostrarEnFrame();
@@ -75,8 +115,7 @@ public class MenuPrincipal extends JPanel {
     private void abrirReportes() {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         frame.dispose();
-        Reportes reportes = new Reportes();
-        reportes.mostrarEnFrame();
+        new Reportes().mostrarEnFrame();
     }
 
     private void cerrarSesion() {
@@ -85,18 +124,23 @@ public class MenuPrincipal extends JPanel {
         frame.dispose();
         new MenuInicio().mostrarEnFrame();
     }
-
-    private ImageIcon cargarImagen(String ruta) {
-        java.net.URL imgURL = getClass().getClassLoader().getResource(ruta);
-        return (imgURL != null) ? new ImageIcon(imgURL) : new ImageIcon();
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(fondoImagen, 0, 0, getWidth(), getHeight(), this);
     }
-
+    
     public void mostrarEnFrame() {
         JFrame frame = new JFrame("Menu Principal");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this);
-        frame.pack();
+        frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new MenuPrincipal(new Login("user", "pass", "Nombre")) .mostrarEnFrame());
     }
 }
