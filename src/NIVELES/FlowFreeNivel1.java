@@ -11,21 +11,7 @@ package NIVELES;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.util.HashMap;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
-import java.awt.Point;
+import java.util.*;
 
 public class FlowFreeNivel1 extends JPanel {
     private final int gridSize = 3;
@@ -33,13 +19,13 @@ public class FlowFreeNivel1 extends JPanel {
     private final int[][] grid = new int[gridSize][gridSize];
     private final Color[] colors = {Color.GREEN, Color.BLUE, Color.RED};
     private final HashMap<Point, Integer> startPoints = new HashMap<>();
+    private Stack<Point> trazoActual = new Stack<>();  // Pila para retroceder
     private Point previousPoint = null;
     private int currentColor = 0;
     private MapaNivelesBonito mapa;
-    
 
     public FlowFreeNivel1(MapaNivelesBonito mapa) {
-        this.mapa = mapa;  
+        this.mapa = mapa;
         setPreferredSize(new Dimension(gridSize * cellSize, gridSize * cellSize));
         setBackground(Color.BLACK);
         cargarPuntosDeLaImagen();
@@ -53,6 +39,8 @@ public class FlowFreeNivel1 extends JPanel {
                 if (startPoints.containsKey(p)) {
                     currentColor = startPoints.get(p);
                     previousPoint = p;
+                    trazoActual.clear();  // Limpiar trazo previo
+                    trazoActual.push(p);  // Guardar primer punto
                     grid[x][y] = currentColor;
                     repaint();
                 }
@@ -64,7 +52,7 @@ public class FlowFreeNivel1 extends JPanel {
 
                 if (nivelCompletado()) {
                     JOptionPane.showMessageDialog(null, "¡Nivel 1 completado!");
-                    mapa.desbloquearNivel(1); 
+                    mapa.desbloquearNivel(1);
                     SwingUtilities.getWindowAncestor(FlowFreeNivel1.this).dispose();
                 }
             }
@@ -79,16 +67,41 @@ public class FlowFreeNivel1 extends JPanel {
                 Point p = new Point(x, y);
 
                 if (esValido(x, y) && esAdyacente(previousPoint, p)) {
-                    if (grid[x][y] == 0 || grid[x][y] == currentColor) {
+                    int colorEnCelda = grid[x][y];
+
+                    if (colorEnCelda == 0 || colorEnCelda == currentColor) {
                         grid[x][y] = currentColor;
+                        trazoActual.push(p);  // Guardar el punto en la pila
                         previousPoint = p;
+                        repaint();
+                    } else if (colorEnCelda != currentColor) {
+                        // ⚠️ Colisión con color diferente, deshacer línea
+                        System.out.println("Colisión: color diferente. Revirtiendo línea.");
+                        revertirTrazo();
                         repaint();
                     }
                 }
             }
         });
     }
-    
+
+    // 🟢 Regresa el trazo al estado inicial (antes de chocar con otro color)
+    private void revertirTrazo() {
+        while (!trazoActual.isEmpty()) {
+            Point p = trazoActual.pop();
+            if (startPoints.containsKey(p)) {
+                // No borrar el punto inicial
+                break;
+            } else {
+                grid[p.x][p.y] = 0;
+            }
+        }
+        if (!trazoActual.isEmpty()) {
+            previousPoint = trazoActual.peek();  // Último punto válido
+        } else {
+            previousPoint = null;
+        }
+    }
 
     private void cargarPuntosDeLaImagen() {
         startPoints.put(new Point(0, 0), 1); // Verde
@@ -119,28 +132,41 @@ public class FlowFreeNivel1 extends JPanel {
         return true;
     }
 
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(Color.WHITE);
-        for (int x = 0; x <= gridSize; x++) {
-            g.drawLine(x * cellSize, 0, x * cellSize, gridSize * cellSize);
-        }
-        for (int y = 0; y <= gridSize; y++) {
-            g.drawLine(0, y * cellSize, gridSize * cellSize, y * cellSize);
-        }
+   protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    Graphics2D g2 = (Graphics2D) g;
+    g2.setColor(Color.WHITE);
 
-        for (int x = 0; x < gridSize; x++) {
-            for (int y = 0; y < gridSize; y++) {
-                if (grid[x][y] > 0) {
-                    g.setColor(colors[grid[x][y] - 1]);
-                    g.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-                }
-            }
-        }
-
-        for (Point p : startPoints.keySet()) {
-            g.setColor(colors[startPoints.get(p) - 1]);
-            g.fillOval(p.x * cellSize + 10, p.y * cellSize + 10, 80, 80);
-        }
+    // Dibujar la grilla
+    for (int x = 0; x <= gridSize; x++) {
+        g2.drawLine(x * cellSize, 0, x * cellSize, gridSize * cellSize);
     }
+    for (int y = 0; y <= gridSize; y++) {
+        g2.drawLine(0, y * cellSize, gridSize * cellSize, y * cellSize);
+    }
+
+    // Configurar grosor de línea
+    g2.setStroke(new BasicStroke(12));  // Puedes ajustar el grosor
+
+    // Dibujar las líneas entre los puntos visitados
+    for (int i = 0; i < trazoActual.size() - 1; i++) {
+        Point p1 = trazoActual.get(i);
+        Point p2 = trazoActual.get(i + 1);
+        int colorIndex = grid[p1.x][p1.y] - 1;
+        g2.setColor(colors[colorIndex]);
+
+        int x1 = p1.x * cellSize + cellSize / 2;
+        int y1 = p1.y * cellSize + cellSize / 2;
+        int x2 = p2.x * cellSize + cellSize / 2;
+        int y2 = p2.y * cellSize + cellSize / 2;
+
+        g2.drawLine(x1, y1, x2, y2);
+    }
+
+    // Dibujar los puntos iniciales (círculos)
+    for (Point p : startPoints.keySet()) {
+        g2.setColor(colors[startPoints.get(p) - 1]);
+        g2.fillOval(p.x * cellSize + 10, p.y * cellSize + 10, 80, 80);
+    }
+}
 }
