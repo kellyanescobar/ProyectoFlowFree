@@ -52,8 +52,8 @@ public class FlowFreeNivel3 extends JPanel {
                 previousPoint = null;
 
                 if (nivelCompletado()) {
-                    JOptionPane.showMessageDialog(null, "¡Nivel 2 completado!");
-                    mapa.desbloquearNivel(2);
+                    JOptionPane.showMessageDialog(null, "¡Nivel 3 completado!");
+                    mapa.desbloquearNivel(3);
                     SwingUtilities.getWindowAncestor(FlowFreeNivel3.this).dispose();
                 }
             }
@@ -176,4 +176,3 @@ public class FlowFreeNivel3 extends JPanel {
         }
     }
 }
-

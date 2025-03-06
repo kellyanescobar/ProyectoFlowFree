@@ -14,18 +14,18 @@ import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Stack;
 
-public class FlowFreeNivel1 extends JPanel {
-    private final int gridSize = 3;
+public class FlowFreeNivel5 extends JPanel {
+    private final int gridSize = 10;
     private final int cellSize = 100;
     private final int[][] grid = new int[gridSize][gridSize];
-    private final Color[] colors = {Color.GREEN, Color.BLUE, Color.RED};
-    private final HashMap<Point, Integer> startPoints = new HashMap<>();
+    private final Color[] colors = {Color.BLUE, Color.GREEN, new Color(255, 102, 0), new Color(160, 32, 240), Color.PINK, Color.YELLOW, new Color(51, 204, 255) , new Color(102, 255, 102)}; // Azul, Verde, Naranja, Morado, Rosado y Amarillo, Aqua, VerdePastoso 
     private Stack<Point> trazoActual = new Stack<>();
+    private final HashMap<Point, Integer> startPoints = new HashMap<>();
     private Point previousPoint = null;
     private int currentColor = 0;
     private MapaNivelesBonito mapa;
 
-    public FlowFreeNivel1(MapaNivelesBonito mapa) {
+    public FlowFreeNivel5(MapaNivelesBonito mapa) {
         this.mapa = mapa;
         setPreferredSize(new Dimension(gridSize * cellSize, gridSize * cellSize));
         setBackground(Color.BLACK);
@@ -52,9 +52,9 @@ public class FlowFreeNivel1 extends JPanel {
                 previousPoint = null;
 
                 if (nivelCompletado()) {
-                    JOptionPane.showMessageDialog(null, "¡Nivel 1 completado!");
-                    mapa.desbloquearNivel(1);
-                    SwingUtilities.getWindowAncestor(FlowFreeNivel1.this).dispose();
+                    JOptionPane.showMessageDialog(null, "¡Nivel 4 completado!");
+                    mapa.desbloquearNivel(4);
+                    SwingUtilities.getWindowAncestor(FlowFreeNivel5.this).dispose();
                 }
             }
         });
@@ -102,13 +102,30 @@ public class FlowFreeNivel1 extends JPanel {
         repaint();
     }
 
-    private void cargarPuntosDeLaImagen() {
-        startPoints.put(new Point(0, 0), 1);
-        startPoints.put(new Point(1, 1), 1);
-        startPoints.put(new Point(0, 1), 2);
-        startPoints.put(new Point(1, 2), 2);
-        startPoints.put(new Point(2, 0), 3);
-        startPoints.put(new Point(2, 2), 3);
+   private void cargarPuntosDeLaImagen() {
+        startPoints.put(new Point(1, 1), 1); // Azul
+        startPoints.put(new Point(3, 0), 1); // Azul
+
+        startPoints.put(new Point(0, 1), 2); // Verde
+        startPoints.put(new Point(9, 0), 2); // Verde
+
+        startPoints.put(new Point(4, 8), 3); // Naranja
+        startPoints.put(new Point(8, 8), 3); // Naranja
+
+        startPoints.put(new Point(0, 0), 4); // Morado
+        startPoints.put(new Point(7, 4), 4); // Morado
+        
+        startPoints.put(new Point(1, 5), 5); // Rosado
+        startPoints.put(new Point(1, 8), 5); // Rosado
+        
+        startPoints.put(new Point(2, 6), 6); // Amarillo
+        startPoints.put(new Point(2, 7), 6); // Amarillo
+        
+        startPoints.put(new Point(6, 7), 7); // Aqua
+        startPoints.put(new Point(8, 6), 7); // Aqua
+        
+        startPoints.put(new Point(0, 1), 8); // VerdePastoso
+        startPoints.put(new Point(9, 0), 8); // VerdePastoso
     }
 
     private boolean esValido(int x, int y) {
@@ -143,7 +160,7 @@ public class FlowFreeNivel1 extends JPanel {
             g2.drawLine(0, y * cellSize, gridSize * cellSize, y * cellSize);
         }
 
-        g2.setStroke(new BasicStroke(12));
+        g2.setStroke(new BasicStroke(6)); // Mantiene las líneas delgadas como en el Nivel 1
 
         for (int i = 0; i < trazoActual.size() - 1; i++) {
             Point p1 = trazoActual.get(i);
@@ -165,3 +182,5 @@ public class FlowFreeNivel1 extends JPanel {
         }
     }
 }
+
+

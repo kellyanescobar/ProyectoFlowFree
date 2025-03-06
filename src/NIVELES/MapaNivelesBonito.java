@@ -64,13 +64,20 @@ public class MapaNivelesBonito extends JPanel {
             case 3: 
                 frame.add(new FlowFreeNivel3(this));
                 break;
+            case 4: 
+                frame.add(new FlowFreeNivel4(this));
+                break;
+            case 5:
+                frame.add(new FlowFreeNivel5(this));
+                break; 
             default:
                 JOptionPane.showMessageDialog(this, "Nivel " + nivel + " aún no está implementado.");
                 return;
         }
 
-        frame.pack();
-        frame.setVisible(true);
+         frame.pack();                        
+        frame.setLocationRelativeTo(null);    
+        frame.setVisible(true);  
     }
 
     public void desbloquearNivel(int nivel) {
