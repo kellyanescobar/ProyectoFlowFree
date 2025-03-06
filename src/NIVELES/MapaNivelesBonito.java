@@ -23,7 +23,7 @@ public class MapaNivelesBonito extends JPanel {
         setPreferredSize(new Dimension(600, 400));
         setBackground(Color.BLACK);
 
-        nivelesDesbloqueados[0] = true; // Solo el nivel 1 desbloqueado al inicio
+        nivelesDesbloqueados[0] = true;  // Solo el nivel 1 desbloqueado al inicio
 
         cargarPosicionesNiveles();
 
@@ -51,15 +51,26 @@ public class MapaNivelesBonito extends JPanel {
     }
 
     private void abrirNivel(int nivel) {
-        if (nivel == 1) {
-            JFrame frame = new JFrame("Nivel 1");
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.add(new FlowFreeNivel1(this)); // Aquí tu nivel 1
-            frame.pack();
-            frame.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Nivel " + nivel + " aún está bloqueado.");
+        JFrame frame = new JFrame("Nivel " + nivel);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        switch (nivel) {
+            case 1:
+                frame.add(new FlowFreeNivel1(this));
+                break;
+            case 2:
+                frame.add(new FlowFreeNivel2(this));
+                break;
+            case 3: 
+                frame.add(new FlowFreeNivel3(this));
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "Nivel " + nivel + " aún no está implementado.");
+                return;
         }
+
+        frame.pack();
+        frame.setVisible(true);
     }
 
     public void desbloquearNivel(int nivel) {
@@ -75,7 +86,6 @@ public class MapaNivelesBonito extends JPanel {
         dibujarGrid(g);
         dibujarCamino(g);
         dibujarNiveles(g);
-        dibujarMonedas(g);
     }
 
     private void dibujarGrid(Graphics g) {
@@ -112,19 +122,6 @@ public class MapaNivelesBonito extends JPanel {
             g.setFont(new Font("Arial", Font.BOLD, 20));
             String numero = String.valueOf(i + 1);
             g.drawString(numero, pos.x - 6, pos.y + 7);
-        }
-    }
-
-    private void dibujarMonedas(Graphics g) {
-        g.setColor(Color.YELLOW);
-        int[][] monedas = {
-                {100, 250}, {200, 300}, {300, 200}, {400, 250}
-        };
-        for (int[] moneda : monedas) {
-            g.fillOval(moneda[0] - 10, moneda[1] - 10, 20, 20);
-            g.setColor(Color.ORANGE);
-            g.drawOval(moneda[0] - 10, moneda[1] - 10, 20, 20);
-            g.setColor(Color.YELLOW);
         }
     }
 
