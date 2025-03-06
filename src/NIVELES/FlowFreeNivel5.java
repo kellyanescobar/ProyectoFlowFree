@@ -16,7 +16,7 @@ import java.util.Stack;
 
 public class FlowFreeNivel5 extends JPanel {
     private final int gridSize = 10;
-    private final int cellSize = 100;
+    private final int cellSize = 70;
     private final int[][] grid = new int[gridSize][gridSize];
     private final Color[] colors = {Color.BLUE, Color.GREEN, new Color(255, 102, 0), new Color(160, 32, 240), Color.PINK, Color.YELLOW, new Color(51, 204, 255) , new Color(102, 255, 102)}; // Azul, Verde, Naranja, Morado, Rosado y Amarillo, Aqua, VerdePastoso 
     private Stack<Point> trazoActual = new Stack<>();
@@ -124,8 +124,8 @@ public class FlowFreeNivel5 extends JPanel {
         startPoints.put(new Point(6, 7), 7); // Aqua
         startPoints.put(new Point(8, 6), 7); // Aqua
         
-        startPoints.put(new Point(0, 1), 8); // VerdePastoso
-        startPoints.put(new Point(9, 0), 8); // VerdePastoso
+        startPoints.put(new Point(4, 1), 8); // VerdePastoso
+        startPoints.put(new Point(8, 2), 8); // VerdePastoso
     }
 
     private boolean esValido(int x, int y) {
@@ -148,11 +148,12 @@ public class FlowFreeNivel5 extends JPanel {
         return true;
     }
 
+     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.WHITE);
 
+        g2.setColor(Color.WHITE);
         for (int x = 0; x <= gridSize; x++) {
             g2.drawLine(x * cellSize, 0, x * cellSize, gridSize * cellSize);
         }
@@ -160,8 +161,9 @@ public class FlowFreeNivel5 extends JPanel {
             g2.drawLine(0, y * cellSize, gridSize * cellSize, y * cellSize);
         }
 
-        g2.setStroke(new BasicStroke(6)); // Mantiene las líneas delgadas como en el Nivel 1
+        g2.setStroke(new BasicStroke(4));  // Grosor de línea más delgado
 
+    
         for (int i = 0; i < trazoActual.size() - 1; i++) {
             Point p1 = trazoActual.get(i);
             Point p2 = trazoActual.get(i + 1);
@@ -176,11 +178,13 @@ public class FlowFreeNivel5 extends JPanel {
             g2.drawLine(x1, y1, x2, y2);
         }
 
+       //size pelotitas
+        int circleSize = 50;
+        int offset = (cellSize - circleSize) / 2;
+
         for (Point p : startPoints.keySet()) {
             g2.setColor(colors[startPoints.get(p) - 1]);
-            g2.fillOval(p.x * cellSize + 10, p.y * cellSize + 10, 80, 80);
+            g2.fillOval(p.x * cellSize + offset, p.y * cellSize + offset, circleSize, circleSize);
         }
     }
 }
-
-

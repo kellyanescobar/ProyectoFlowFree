@@ -23,7 +23,7 @@ public class MapaNivelesBonito extends JPanel {
         setPreferredSize(new Dimension(600, 400));
         setBackground(Color.BLACK);
 
-        nivelesDesbloqueados[0] = true;  // Solo el nivel 1 desbloqueado al inicio
+        nivelesDesbloqueados[4] = true;  // Solo el nivel 1 desbloqueado al inicio
 
         cargarPosicionesNiveles();
 
