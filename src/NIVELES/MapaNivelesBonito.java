@@ -11,7 +11,12 @@ package NIVELES;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MapaNivelesBonito extends JPanel {
     private final int totalNiveles = 5;
@@ -44,7 +49,28 @@ public class MapaNivelesBonito extends JPanel {
         setLayout(null);
         for (int i = 0; i < totalNiveles; i++) {
             Point pos = posicionesNiveles.get(i);
-            JButton boton = new JButton(String.valueOf(i + 1));
+            String rutaImagen = "/imagenes/botonnivel" + (i + 1) + ".png";
+            URL imgURL = getClass().getResource(rutaImagen);
+            if (imgURL == null) {
+                try {
+                    imgURL = new File("C:/Users/50494/OneDrive/Pictures/botonnivel" + (i + 1) + ".png").toURI().toURL();
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(MapaNivelesBonito.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            JButton boton;
+            if (imgURL != null) {
+                ImageIcon icon = new ImageIcon(imgURL);
+                Image img = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                boton = new JButton(new ImageIcon(img));
+            } else {
+                System.out.println("Imagen no encontrada: " + rutaImagen);
+                boton = new JButton("" + (i + 1)); // Usa un número si la imagen no se encuentra
+            }
+            boton.setContentAreaFilled(false); // Elimina el relleno del botón
+            boton.setBorderPainted(false);     // Elimina el borde del botón
+            boton.setFocusPainted(false);      // Elimina el foco visual
+            boton.setOpaque(false); // Hace el fondo del botón transparente
             boton.setBounds(pos.x - 25, pos.y - 25, 50, 50);
             boton.setEnabled(nivelesDesbloqueados[i]);
             int nivel = i + 1;
