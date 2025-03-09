@@ -132,11 +132,13 @@ public class FlowFreeNivel3 extends JPanel {
         return (dx == 1 && dy == 0) || (dx == 0 && dy == 1);
     }
 
+   
     private boolean nivelCompletado() {
-        for (Point p : startPoints.keySet()) {
-            int color = startPoints.get(p);
-            if (grid[p.x][p.y] != color) {
-                return false;
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                if (grid[i][j] == 0) {
+                    return false; 
+                }
             }
         }
         return true;

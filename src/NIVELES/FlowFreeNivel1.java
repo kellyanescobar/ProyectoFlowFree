@@ -88,7 +88,29 @@ public class FlowFreeNivel1 extends JPanel {
         });
     }
 
-    private void cancelarTrazo() {
+   private void cancelarTrazo() {
+        boolean trazoValido = false;
+        if (!trazoActual.isEmpty()) {
+            Point lastPoint = trazoActual.peek();
+            if (startPoints.containsKey(lastPoint) && startPoints.get(lastPoint) == currentColor) {
+                trazoValido = true;
+            }
+        }
+        
+        if (!trazoValido) {
+            while (!trazoActual.isEmpty()) {
+                Point p = trazoActual.pop();
+                if (startPoints.containsKey(p)) {
+                    break;
+                } else {
+                    grid[p.x][p.y] = 0;
+                }
+            }
+        }
+        
+        currentColor = 0;
+        previousPoint = null;
+        repaint();
         while (!trazoActual.isEmpty()) {
             Point p = trazoActual.pop();
             if (startPoints.containsKey(p)) {

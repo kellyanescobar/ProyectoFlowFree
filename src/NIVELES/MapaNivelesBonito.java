@@ -64,7 +64,7 @@ public class MapaNivelesBonito extends JPanel {
                 Image img = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
                 boton = new JButton(new ImageIcon(img));
             } else {
-                System.out.println("Imagen no encontrada: " + rutaImagen);
+                //System.out.println("Imagen no encontrada: " + rutaImagen);
                 boton = new JButton("" + (i + 1)); 
             }
             boton.setContentAreaFilled(false);
@@ -141,4 +141,3 @@ public class MapaNivelesBonito extends JPanel {
         frame.setVisible(true);
     }
 }
-

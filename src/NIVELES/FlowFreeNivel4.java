@@ -139,14 +139,16 @@ public class FlowFreeNivel4 extends JPanel {
     }
 
     private boolean nivelCompletado() {
-        for (Point p : startPoints.keySet()) {
-            int color = startPoints.get(p);
-            if (grid[p.x][p.y] != color) {
-                return false;
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                if (grid[i][j] == 0) {
+                    return false; 
+                }
             }
         }
         return true;
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {
