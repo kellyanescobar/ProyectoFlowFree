@@ -27,10 +27,10 @@ public class MapaNivelesBonito extends JPanel {
     public MapaNivelesBonito() {
         setPreferredSize(new Dimension(700, 400));
         
-        // Cargar imagen de fondo
+        
         fondo = new ImageIcon(getClass().getResource("/imagenes/mapa2.png")).getImage();
         
-        nivelesDesbloqueados[0] = true;  // Solo el nivel 1 desbloqueado
+        nivelesDesbloqueados[0] = true;  
         cargarPosicionesNiveles();
         configurarBotones();
     }
@@ -65,12 +65,11 @@ public class MapaNivelesBonito extends JPanel {
                 boton = new JButton(new ImageIcon(img));
             } else {
                 System.out.println("Imagen no encontrada: " + rutaImagen);
-                boton = new JButton("" + (i + 1)); // Usa un número si la imagen no se encuentra
+                boton = new JButton("" + (i + 1)); 
             }
-            boton.setContentAreaFilled(false); // Elimina el relleno del botón
-            boton.setBorderPainted(false);     // Elimina el borde del botón
-            boton.setFocusPainted(false);      // Elimina el foco visual
-            boton.setOpaque(false); // Hace el fondo del botón transparente
+            boton.setContentAreaFilled(false);
+            boton.setFocusPainted(false);      
+            boton.setOpaque(false);
             boton.setBounds(pos.x - 25, pos.y - 25, 50, 50);
             boton.setEnabled(nivelesDesbloqueados[i]);
             int nivel = i + 1;
@@ -121,7 +120,7 @@ public class MapaNivelesBonito extends JPanel {
     public void desbloquearNivel(int nivel) {
         if (nivel < totalNiveles) {
             nivelesDesbloqueados[nivel] = true;
-            configurarBotones(); // Actualiza los botones
+            configurarBotones(); 
         }
     }
 
