@@ -3,127 +3,132 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyectoflowfree;
-
+import java.awt.*;
+import javax.swing.*;
 /**
  *
  * @author laraj
  */
 
-import java.awt.*;
-import javax.swing.*;
-
 public class VerPerfil extends JPanel {
-    private JTextArea datosArea;
-    private JButton cambiarContraseña, eliminarCuenta, regresar;
-    private JLabel icono, titulo;
+    private JLabel avatar, nombreAvatar;
+    private JLabel usuario, nombre, fecha; 
+    private JButton configuracion, regresar;
+    private Image fondoImagen;
 
     public VerPerfil() {
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        setLayout(null);
 
-        ImageIcon imagenIcono = cargarImagen("imagenes/Icono.jpeg");
-        icono = (imagenIcono != null) ? new JLabel(imagenIcono) : new JLabel("Imagen no encontrada");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        add(icono, gbc);
+        fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Perfil.png")).getImage();
 
-        titulo = new JLabel("Ver Perfil", SwingConstants.CENTER);
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        gbc.gridy = 1;
-        add(titulo, gbc);
+        ImageIcon imagenAvatar = new ImageIcon("imagenes/avatar.png"); 
+        avatar = new JLabel(imagenAvatar);
+        avatar.setBounds(25, 100, 200, 200);
+        add(avatar);
 
-        datosArea = new JTextArea(5, 20);
-        datosArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(datosArea);
-        gbc.gridy = 2;
-        add(scrollPane, gbc);
+        // Nombre del avatar 
+        nombreAvatar = new JLabel("ROSADO", SwingConstants.CENTER);
+        nombreAvatar.setFont(new Font("Pixel Font", Font.BOLD, 18));
+        nombreAvatar.setForeground(Color.PINK);
+        nombreAvatar.setBounds(25, 170, 200, 30);
+        add(nombreAvatar);
 
-        JPanel botonesPanel = new JPanel(new GridLayout(1, 3, 10, 10));
-        botonesPanel.setPreferredSize(new Dimension(300, 50));
+        // Usuario
+       usuario = crearEtiquetaNoEditable("USUARIO", new Color(247, 186, 186), new Color(255, 49, 49));
+       usuario.setBounds(30, 425, 200, 50);
+       add(usuario);
 
-        cambiarContraseña = new JButton("Cambiar Contraseña");
-        cambiarContraseña.addActionListener(e -> mostrarDialogoCambioContraseña());
-        botonesPanel.add(cambiarContraseña);
+        // Nombre
+        nombre = crearEtiquetaNoEditable("NOMBRE", new Color(250, 201, 222), new Color(230, 31, 147));
+        nombre.setBounds(300, 150, 200, 40);
+        add(nombre);
 
-        eliminarCuenta = new JButton("Eliminar Cuenta");
-        eliminarCuenta.addActionListener(e -> confirmarEliminarCuenta());
-        botonesPanel.add(eliminarCuenta);
+        // Fecha
+        fecha = crearEtiquetaNoEditable("FECHA", new Color(200, 255, 247), new Color(0, 183, 231));
+        fecha.setBounds(300, 220, 200, 40);
+        add(fecha);
 
-        regresar = new JButton("Regresar al Menu");
+
+        // Boton Configuracion 
+        configuracion = crearBotonEditable("CONFIGURACION",new Color(251, 210, 255), new Color(199, 0, 255));
+        configuracion.setBounds(300, 290, 200, 40);
+        configuracion.addActionListener(e -> abrirConfiguracion());
+        add(configuracion);
+
+        // Boton Regresar 
+        regresar = crearBotonEditable("REGRESAR", new Color(246, 176, 164), new Color(234, 89, 35));
+        regresar.setBounds(300, 360, 200, 40);
         regresar.addActionListener(e -> regresarMenu());
-        botonesPanel.add(regresar);
-
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        add(botonesPanel, gbc);
-
-        mostrarDatosPerfil();
+        add(regresar);
     }
 
-    private void mostrarDatosPerfil() {
-       
+    private JLabel crearEtiquetaNoEditable(String texto, Color bgColor, Color fgColor) {
+    JLabel etiqueta = new JLabel(texto, SwingConstants.CENTER);
+    etiqueta.setFont(new Font("Pixel Font", Font.BOLD, 14));
+    etiqueta.setForeground(fgColor);  
+    etiqueta.setOpaque(true);
+    etiqueta.setBackground(bgColor);  
+    etiqueta.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1)); 
+    return etiqueta;
+}
+
+
+    private JButton crearBotonEditable(String texto, Color bgColor, Color fgColor) {
+        JButton boton = new JButton(texto);
+        boton.setFont(new Font("Pixel Font", Font.BOLD, 14));
+        boton.setForeground(fgColor);
+        boton.setBackground(bgColor);
+        boton.setBorderPainted(false);
+        boton.setFocusPainted(false);
+        boton.setContentAreaFilled(true);
+        
+        Color originalBg=bgColor;
+        Color hoverBg=bgColor.darker();
+        
+        boton.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseEntered(java.awt.event.MouseEvent evt){
+            boton.setBackground(hoverBg);
+        }
+        @Override
+        public void mouseExited(java.awt.event.MouseEvent evt){
+           boton.setBackground(originalBg); 
+        }
+        });
+        
+        return boton;
     }
 
-    private void mostrarDialogoCambioContraseña() {
-        if (Login.usuarioLogueado == null) {
-            JOptionPane.showMessageDialog(null, "No hay usuario logueado.");
-            return;
-        }
-
-        JPasswordField actualField = new JPasswordField();
-        JPasswordField nuevaField = new JPasswordField();
-        Object[] message = {
-            "Contraseña Actual:", actualField,
-            "Nueva Contraseña (5 caracteres):", nuevaField
-        };
-
-        int option = JOptionPane.showConfirmDialog(null, message, "Cambiar Contraseña", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-            String actual = new String(actualField.getPassword());
-            String nueva = new String(nuevaField.getPassword());
-
-
-            if (nueva.length() != 5) {
-                JOptionPane.showMessageDialog(null, "La nueva contraseña debe tener exactamente 5 caracteres.");
-                return;
-            }
-
-            
-        }
-    }
-
-    private void confirmarEliminarCuenta() {
-        if (Login.usuarioLogueado == null) {
-            JOptionPane.showMessageDialog(null, "No hay usuario logueado.");
-            return;
-        }
-
+    private void abrirConfiguracion() {
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        frame.dispose();
+        new Configuracion().mostrarEnFrame();
     }
 
     private void regresarMenu() {
-        if (Login.usuarioLogueado == null) {
-            JOptionPane.showMessageDialog(null, "No hay usuario logueado.");
-            return;
-        }
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         frame.dispose();
         new MenuPrincipal(Login.usuarioLogueado).mostrarEnFrame();
     }
 
-    private ImageIcon cargarImagen(String ruta) {
-        java.net.URL imgURL = getClass().getClassLoader().getResource(ruta);
-        return (imgURL != null) ? new ImageIcon(imgURL) : new ImageIcon();
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(fondoImagen, 0, 0, getWidth(), getHeight(), this);
     }
 
     public void mostrarEnFrame() {
         JFrame frame = new JFrame("Ver Perfil");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this);
-        frame.pack();
+        frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new VerPerfil().mostrarEnFrame();
+        });
     }
 }

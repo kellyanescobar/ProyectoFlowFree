@@ -95,6 +95,48 @@ public class Login implements Serializable {
         }
     }
     
+   public void cambiarNombre(String nuevoNombre) {
+    if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
+        this.nombreCompleto = nuevoNombre;
+        guardarDatos(); 
+    }
+}
+
+   public boolean cambiarUsuario(String nuevoUsuario) {
+    if (nuevoUsuario != null && !nuevoUsuario.trim().isEmpty()) {
+        File oldFolder = new File(USER_DIR + this.usuario);
+        File newFolder = new File(USER_DIR + nuevoUsuario);
+
+        if (newFolder.exists()) {
+            JOptionPane.showMessageDialog(null, "El nombre de usuario ya está en uso.");
+            return false;
+        }
+
+        if (oldFolder.renameTo(newFolder)) {
+            this.usuario = nuevoUsuario;
+            guardarDatos();
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(null, "No se pudo cambiar el usuario.");
+            return false;
+        }
+    }
+    return false;
+}
+
+    
+    public boolean cambiarContraseña(String nuevaContraseña) {
+    if (nuevaContraseña.length() >= 5) {
+        this.password = nuevaContraseña;
+        guardarDatos();
+        return true;
+    } else {
+        JOptionPane.showMessageDialog(null, "La contraseña debe tener al menos 5 caracteres.");
+        return false;
+    }
+}
+
+    
     public boolean eliminarCuenta() {
         if (usuarioLogueado == null) return false;
         File userFolder = new File(USER_DIR + usuario);
