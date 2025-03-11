@@ -3,60 +3,116 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyectoflowfree;
-
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 /**
  *
  * @author laraj
  */
 
-import java.awt.*;
-import javax.swing.*;
-
 public class IniciarSesion extends JPanel {
     private JTextField usuario;
     private JPasswordField contra;
     private JButton ingresar, regresar;
-    private JLabel icono;
+    private JLabel lblUsuario, lblContraseña;
+    private Image fondoImagen;
 
     public IniciarSesion() {
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        setLayout(null);
 
-        ImageIcon imagenIcono = cargarImagen("imagenes/Icono.jpeg");
-        icono = (imagenIcono != null) ? new JLabel(imagenIcono) : new JLabel("Imagen no encontrada");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        add(icono, gbc);
+        fondoImagen = new ImageIcon(getClass().getResource("/imagenes/IniciarSesion.png")).getImage();
 
-        JPanel formPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        // lbl Nombre de Usuario
+        lblUsuario = crearEtiqueta("Nombre de Usuario:");
+        lblUsuario.setBounds(270, 200, 250, 30);
+        add(lblUsuario);
 
-        formPanel.add(new JLabel("Nombre de usuario:", SwingConstants.RIGHT));
-        usuario = new JTextField(15);
-        formPanel.add(usuario);
+        //Entrada Nombre de Usuario
+        usuario = crearCampoTexto();
+        usuario.setBounds(270, 230, 250, 40);
+        add(usuario);
 
-        formPanel.add(new JLabel("Contraseña:", SwingConstants.RIGHT));
-        contra = new JPasswordField(15);
-        formPanel.add(contra);
+        //lbl Contraseña
+        lblContraseña = crearEtiqueta("Contraseña:");
+        lblContraseña.setBounds(270, 270, 250, 30);
+        add(lblContraseña);
 
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        add(formPanel, gbc);
+        //Entrada de Contraseña
+        contra = new JPasswordField();
+        estilizarCampo(contra);
+        contra.setBounds(270, 300, 250, 40);
+        add(contra);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
-
-        ingresar = new JButton("Iniciar Sesión");
+        // Boton Iniciar Secion
+        ingresar = crearBoton("Iniciar Sesion", new Color(0xA2F255), new Color(0x026610));
+        ingresar.setBounds(270, 370, 250, 50);
         ingresar.addActionListener(e -> iniciarSesion());
-        buttonPanel.add(ingresar);
+        add(ingresar);
 
-        regresar = new JButton("Regresar");
+        // Boton Regresar
+        regresar = crearBoton("Regresar", new Color(0xFFECF4), new Color(0xFA237F));
+        regresar.setBounds(270, 440, 250, 50);
         regresar.addActionListener(e -> regresarPantalla());
-        buttonPanel.add(regresar);
+        add(regresar);
+    }
 
-        gbc.gridy = 2;
-        add(buttonPanel, gbc);
+    private JLabel crearEtiqueta(String texto) {
+        JLabel etiqueta = new JLabel(texto, SwingConstants.LEFT);
+        etiqueta.setFont(new Font("Arial", Font.BOLD, 16));
+        etiqueta.setForeground(Color.WHITE);
+        return etiqueta;
+    }
+
+    private JTextField crearCampoTexto() {
+        JTextField campo = new JTextField();
+        estilizarCampo(campo);
+        return campo;
+    }
+
+    private void estilizarCampo(JComponent campo) {
+        campo.setFont(new Font("Arial", Font.PLAIN, 18));
+        campo.setForeground(Color.BLACK);
+        campo.setBackground(Color.WHITE);
+        campo.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(0x026610), 2),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+    }
+
+    private JButton crearBoton(String texto, Color bgColor, Color fgColor) {
+        JButton boton = new JButton(texto);
+        boton.setFont(new Font("Pixel Font", Font.BOLD, 18));
+        boton.setForeground(fgColor);
+        boton.setBackground(bgColor);
+        boton.setBorderPainted(false);
+        boton.setFocusPainted(false);
+        boton.setContentAreaFilled(true);
+
+        boton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setBackground(bgColor.darker());
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setBackground(bgColor);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                boton.setBackground(bgColor.darker().darker());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                boton.setBackground(bgColor.darker());
+            }
+        });
+
+        return boton;
     }
 
     private void iniciarSesion() {
@@ -78,19 +134,19 @@ public class IniciarSesion extends JPanel {
         new MenuInicio().mostrarEnFrame();
     }
 
-    private ImageIcon cargarImagen(String ruta) {
-        java.net.URL imgURL = getClass().getClassLoader().getResource(ruta);
-        return (imgURL != null) ? new ImageIcon(imgURL) : new ImageIcon();
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(fondoImagen, 0, 0, getWidth(), getHeight(), this);
     }
 
     public void mostrarEnFrame() {
         JFrame frame = new JFrame("Iniciar Sesion");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this);
-        frame.pack();
+        frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+   
 }
-
-

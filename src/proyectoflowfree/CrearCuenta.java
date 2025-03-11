@@ -3,65 +3,126 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyectoflowfree;
-
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 /**
  *
  * @author laraj
  */
 
-import java.awt.*;
-import javax.swing.*;
-
 public class CrearCuenta extends JPanel {
-    private JTextField usuario;
+    private JTextField usuario, nombreCompleto;
     private JPasswordField contra;
-    private JTextField nombreCompleto;
     private JButton guardar, regresar;
-    private JLabel icono;
+    private JLabel lblNombre, lblUsuario, lblContra; 
+    private Image fondoImagen;
 
     public CrearCuenta() {
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        setLayout(null);
 
-        ImageIcon imagenIcono = cargarImagen("imagenes/Icono.jpeg");
-        icono = (imagenIcono != null) ? new JLabel(imagenIcono) : new JLabel("Imagen no encontrada");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        add(icono, gbc);
+        fondoImagen = new ImageIcon(getClass().getResource("/imagenes/CrearCuenta.png")).getImage();
+        
+        //lbl del Nombre completo
+        lblNombre = crearEtiqueta("Nombre Completo:");
+        lblNombre.setBounds(270, 170, 250, 30);
+        add(lblNombre);
+        
+        //Entrada Nombre completo
+        nombreCompleto = crearCampoTexto();
+        nombreCompleto.setBounds(270, 200, 250, 40);
+        add(nombreCompleto);
+        
+        //lbl de Nombre de usuario
+        lblUsuario = crearEtiqueta("Nombre de Usuario:");
+        lblUsuario.setBounds(270, 230, 250, 30);
+        add(lblUsuario);
 
-        JPanel formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        //Entrada Nombre de usuario
+        usuario = crearCampoTexto();
+        usuario.setBounds(270, 260, 250, 40);
+        add(usuario);
 
-        formPanel.add(new JLabel("Nombre Completo:", SwingConstants.RIGHT));
-        nombreCompleto = new JTextField(15);
-        formPanel.add(nombreCompleto);
+        //lbl Contraseña
+        lblContra = crearEtiqueta("Contraseña:");
+        lblContra.setBounds(270, 290, 250, 30);
+        add(lblContra);
 
-        formPanel.add(new JLabel("Nombre de usuario:", SwingConstants.RIGHT));
-        usuario = new JTextField(15);
-        formPanel.add(usuario);
+        //Entrada para Contraseña
+        contra = new JPasswordField();
+        estilizarCampo(contra);
+        contra.setBounds(270, 320, 250, 40);
+        add(contra);
 
-        formPanel.add(new JLabel("Contraseña:", SwingConstants.RIGHT));
-        contra = new JPasswordField(15);
-        formPanel.add(contra);
-
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        add(formPanel, gbc);
-
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
-
-        guardar = new JButton("Crear Cuenta");
+        //Boton para crear cuenta
+        guardar = crearBoton("Crear Cuenta", new Color(0xA2F255), new Color(0x026610));
+        guardar.setBounds(270, 380, 250, 50);
         guardar.addActionListener(e -> crearUsuario());
-        buttonPanel.add(guardar);
+        add(guardar);
 
-        regresar = new JButton("Regresar");
+        //Boton para regresar
+        regresar = crearBoton("Regresar", new Color(0xFFECF4), new Color(0xFA237F));
+        regresar.setBounds(270, 450, 250, 50);
         regresar.addActionListener(e -> regresarPantalla());
-        buttonPanel.add(regresar);
+        add(regresar);
+    }
 
-        gbc.gridy = 2;
-        add(buttonPanel, gbc);
+    private JLabel crearEtiqueta(String texto) {
+        JLabel etiqueta = new JLabel(texto, SwingConstants.LEFT);
+        etiqueta.setFont(new Font("Arial", Font.BOLD, 16));
+        etiqueta.setForeground(Color.WHITE); 
+        return etiqueta;
+    }
+
+    private JTextField crearCampoTexto() {
+        JTextField campo = new JTextField();
+        estilizarCampo(campo);
+        return campo;
+    }
+
+    private void estilizarCampo(JComponent campo) {
+        campo.setFont(new Font("Arial", Font.PLAIN, 18));
+        campo.setForeground(Color.BLACK);
+        campo.setBackground(Color.WHITE);
+        campo.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(0x026610), 2), 
+                BorderFactory.createEmptyBorder(5, 10, 5, 10) 
+        ));
+    }
+
+    private JButton crearBoton(String texto, Color bgColor, Color fgColor) {
+        JButton boton = new JButton(texto);
+        boton.setFont(new Font("Pixel Font", Font.BOLD, 18));
+        boton.setForeground(fgColor);
+        boton.setBackground(bgColor);
+        boton.setBorderPainted(false);
+        boton.setFocusPainted(false);
+        boton.setContentAreaFilled(true);
+
+        boton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setBackground(bgColor.darker()); 
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setBackground(bgColor); 
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                boton.setBackground(bgColor.darker().darker()); 
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                boton.setBackground(bgColor.darker()); 
+            }
+        });
+
+        return boton;
     }
 
     private void crearUsuario() {
@@ -72,7 +133,7 @@ public class CrearCuenta extends JPanel {
         if (Login.registrarUsuario(nombre, password, nombreCompletoStr)) {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
             frame.dispose();
-            new MenuPrincipal(Login.cargarDatos(nombre)).mostrarEnFrame();
+            new MenuPrincipal(Login.cargarDatos(nombre)).mostrarEnFrame(); 
         } else {
             JOptionPane.showMessageDialog(null, "Error al crear usuario.");
         }
@@ -84,17 +145,19 @@ public class CrearCuenta extends JPanel {
         new MenuInicio().mostrarEnFrame();
     }
 
-    private ImageIcon cargarImagen(String ruta) {
-        java.net.URL imgURL = getClass().getClassLoader().getResource(ruta);
-        return (imgURL != null) ? new ImageIcon(imgURL) : null;
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(fondoImagen, 0, 0, getWidth(), getHeight(), this);
     }
 
     public void mostrarEnFrame() {
         JFrame frame = new JFrame("Crear Cuenta");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this);
-        frame.pack();
+        frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+
 }
