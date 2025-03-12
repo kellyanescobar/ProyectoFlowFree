@@ -27,24 +27,27 @@ public class VerPerfil extends JPanel {
         add(avatar);
 
         // Nombre del avatar 
-        nombreAvatar = new JLabel("ROSADO", SwingConstants.CENTER);
+        nombreAvatar = new JLabel("Rosado", SwingConstants.CENTER);
         nombreAvatar.setFont(new Font("Pixel Font", Font.BOLD, 18));
         nombreAvatar.setForeground(Color.PINK);
         nombreAvatar.setBounds(25, 170, 200, 30);
         add(nombreAvatar);
 
         // Usuario
-       usuario = crearEtiquetaNoEditable("USUARIO", new Color(247, 186, 186), new Color(255, 49, 49));
+       String nombreDeUsuario=(Login.usuarioLogueado !=null)? Login.usuarioLogueado.getUsuario(): "Sin Usuario";
+       usuario = crearEtiquetaNoEditable("Usuario: "+nombreDeUsuario, new Color(247, 186, 186), new Color(255, 49, 49));
        usuario.setBounds(30, 425, 200, 50);
        add(usuario);
 
         // Nombre
-        nombre = crearEtiquetaNoEditable("NOMBRE", new Color(250, 201, 222), new Color(230, 31, 147));
+        String nombreCompleto=(Login.usuarioLogueado !=null)? Login.usuarioLogueado.getNombreCompleto():"Sin nombre";
+        nombre = crearEtiquetaNoEditable("Nombre: "+nombreCompleto, new Color(250, 201, 222), new Color(230, 31, 147));
         nombre.setBounds(300, 150, 200, 40);
         add(nombre);
 
         // Fecha
-        fecha = crearEtiquetaNoEditable("FECHA", new Color(200, 255, 247), new Color(0, 183, 231));
+        String fechaRegistro=(Login.usuarioLogueado !=null)? Login.usuarioLogueado.getFechaRegistro():"Sin fecha";
+        fecha = crearEtiquetaNoEditable("Fecha: "+fechaRegistro, new Color(200, 255, 247), new Color(0, 183, 231));
         fecha.setBounds(300, 220, 200, 40);
         add(fecha);
 

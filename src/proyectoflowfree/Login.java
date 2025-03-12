@@ -172,4 +172,17 @@ public class Login implements Serializable {
     public String obtenerHistorial() {
         return historialPartidas.isEmpty() ? "No hay partidas registradas." : historialPartidas;
     }
+    
+    public String getUsuario() {
+    return usuario;
+}
+
+    public String getNombreCompleto() {
+    return nombreCompleto;
+}
+
+    public String getFechaRegistro() {
+    return fechaRegistro;
+}
+
 }
