@@ -19,3 +19,9 @@ public class MAIN {
     }
     
 }
+//boton de reinicio
+//boton de regreso
+//alamcenamiento de progreso
+//estadistica y lo del timpo para ganar
+//niveles en abstract
+
