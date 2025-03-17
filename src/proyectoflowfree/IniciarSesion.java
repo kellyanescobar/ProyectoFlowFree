@@ -123,8 +123,8 @@ public class IniciarSesion extends JPanel {
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
             frame.dispose();
             new MenuPrincipal(Login.cargarDatos(usuarioIngresado)).mostrarEnFrame();
-        } else {
-            JOptionPane.showMessageDialog(null, "Cuenta no existe o contraseña incorrecta.");
+        //} else {
+            //JOptionPane.showMessageDialog(null, "Cuenta no existe o contraseña incorrecta.");
         }
     }
 

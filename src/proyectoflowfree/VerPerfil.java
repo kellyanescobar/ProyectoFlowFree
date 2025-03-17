@@ -4,6 +4,7 @@
  */
 package proyectoflowfree;
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 /**
  *
@@ -21,22 +22,25 @@ public class VerPerfil extends JPanel {
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Perfil.png")).getImage();
 
-        ImageIcon imagenAvatar = new ImageIcon("imagenes/avatar.png"); 
-        avatar = new JLabel(imagenAvatar);
-        avatar.setBounds(25, 100, 200, 200);
+        String avatarPath = (Login.usuarioLogueado != null) ? Login.usuarioLogueado.getAvatar() : null;
+        URL avatarUrl = (avatarPath != null && !avatarPath.equals("default.png")) ? getClass().getResource(avatarPath) : null;
+        
+        avatar = new JLabel();
+        avatar.setOpaque(true);
+        avatar.setBackground(Color.WHITE);
+        avatar.setBounds(30, 200, 200, 200);
         add(avatar);
 
-        // Nombre del avatar 
-        nombreAvatar = new JLabel("Rosado", SwingConstants.CENTER);
-        nombreAvatar.setFont(new Font("Pixel Font", Font.BOLD, 18));
-        nombreAvatar.setForeground(Color.PINK);
-        nombreAvatar.setBounds(25, 170, 200, 30);
-        add(nombreAvatar);
-
+        if (avatarUrl != null) {
+            ImageIcon imagenAvatar = new ImageIcon(avatarUrl);
+            Image imagenRedimensionada = imagenAvatar.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            avatar.setIcon(new ImageIcon(imagenRedimensionada));
+        }
+        
         // Usuario
        String nombreDeUsuario=(Login.usuarioLogueado !=null)? Login.usuarioLogueado.getUsuario(): "Sin Usuario";
        usuario = crearEtiquetaNoEditable("Usuario: "+nombreDeUsuario, new Color(247, 186, 186), new Color(255, 49, 49));
-       usuario.setBounds(30, 425, 200, 50);
+       usuario.setBounds(30, 410, 200, 50);
        add(usuario);
 
         // Nombre
@@ -44,6 +48,12 @@ public class VerPerfil extends JPanel {
         nombre = crearEtiquetaNoEditable("Nombre: "+nombreCompleto, new Color(250, 201, 222), new Color(230, 31, 147));
         nombre.setBounds(300, 150, 200, 40);
         add(nombre);
+        
+        // Nombre del Avatar 
+        String nombreAvatarSeleccionado = (Login.usuarioLogueado != null) ? Login.usuarioLogueado.getAvatarNombre() : "Sin Avatar";
+        nombreAvatar = crearEtiquetaNoEditable("Avatar: " + nombreAvatarSeleccionado, new Color(200, 200, 255), new Color(50, 50, 255));
+        nombreAvatar.setBounds(30, 150, 200, 40);
+        add(nombreAvatar);
 
         // Fecha
         String fechaRegistro=(Login.usuarioLogueado !=null)? Login.usuarioLogueado.getFechaRegistro():"Sin fecha";

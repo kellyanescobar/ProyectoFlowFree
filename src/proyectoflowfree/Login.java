@@ -28,6 +28,9 @@ public class Login implements Serializable {
     private static final String USER_DIR = "usuarios/";
     public static Login usuarioLogueado;
     
+    private String avatarRuta = "/imagenes/ElegirAvatar.png"; 
+    private String nombreAvatar = "Desconocido"; 
+    
     public Login(String usuario, String password, String nombreCompleto) {
         this.usuario = usuario;
         this.password = password;
@@ -183,6 +186,22 @@ public class Login implements Serializable {
 
     public String getFechaRegistro() {
     return fechaRegistro;
+}
+ 
+    
+ public void setAvatar(String avatarPath, String avatarName) {
+    this.avatar = avatarPath;
+    this.nombreAvatar = avatarName;  
+    guardarDatos();
+}
+
+
+public String getAvatar() {
+    return this.avatar;
+}   
+
+public String getAvatarNombre() {
+    return nombreAvatar;
 }
 
 }

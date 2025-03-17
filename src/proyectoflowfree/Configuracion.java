@@ -15,6 +15,17 @@ import java.awt.event.ActionListener;
 public class Configuracion extends JPanel {
     private JButton idioma, cambiarNombre, cambiarUsuario, cambiarContra, avatar, eliminarCuenta, regresar;
     private Image fondoImagen;
+    
+    private JButton[] avatares;
+    private String[] nombresAvatares = {"Rosado", "Azul", "Turquesa", "Amarillo", "Rojo", "Verde"};
+    private String[] rutasAvatares = {
+    "/imagenes/AvatarRosado.png",
+    "/imagenes/AvatarAzul.png",
+    "/imagenes/AvatarTurquesa.png",
+    "/imagenes/AvatarAmarillo.png",
+    "/imagenes/AvatarRojo.png",
+    "/imagenes/AvatarVerde.png"
+};
 
     public Configuracion() {
         setLayout(null);
@@ -31,7 +42,7 @@ public class Configuracion extends JPanel {
         // Boton Avatar
         avatar = crearBoton("AVATAR", new Color(250, 201, 222), new Color(230, 31, 147));
         avatar.setBounds(180,240,180,50);
-        avatar.addActionListener(e -> cambiarAvatar());
+        avatar.addActionListener(e -> mostrarSeleccionAvatares());
         add(avatar);
 
         // Boton Eliminar Cuenta
@@ -131,6 +142,73 @@ public class Configuracion extends JPanel {
     }
 }
 
+    
+    private void mostrarSeleccionAvatares() {
+    JFrame avatarFrame = new JFrame("Selecciona tu Avatar");
+    avatarFrame.setSize(600, 550);
+    avatarFrame.setLayout(new BorderLayout());
+    avatarFrame.getContentPane().setBackground(Color.BLACK);
+
+    JPanel panelAvatares = new JPanel(new GridLayout(2, 3, 10, 10)); 
+    panelAvatares.setBackground(Color.BLACK);
+
+    avatares = new JButton[rutasAvatares.length];
+    final int[] avatarSeleccionado = {-1}; 
+
+    for (int i = 0; i < rutasAvatares.length; i++) {
+        ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutasAvatares[i]));
+        Image imagenRedimensionada = iconoOriginal.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+        ImageIcon iconoRedimensionado = new ImageIcon(imagenRedimensionada);
+
+        avatares[i] = new JButton(iconoRedimensionado);
+        avatares[i].setBackground(Color.BLACK);
+        avatares[i].setBorderPainted(false);
+
+        int index = i;
+        avatares[i].addActionListener(e -> {
+            avatarSeleccionado[0] = index; 
+            for (JButton btn : avatares) {
+                btn.setBorderPainted(false); 
+            }
+            avatares[index].setBorderPainted(true);
+            avatares[index].setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3)); 
+        });
+
+        panelAvatares.add(avatares[i]);
+    }
+
+    JButton botonElegir = new JButton("ELEGIR");
+    botonElegir.setFont(new Font("Arial", Font.BOLD, 18));
+    botonElegir.setBackground(new Color(0, 183, 231));
+    botonElegir.setForeground(Color.WHITE);
+    botonElegir.setFocusPainted(false);
+    
+    botonElegir.addActionListener(e -> {
+        if (avatarSeleccionado[0] != -1) {
+            if (Login.usuarioLogueado != null) {
+                Login.usuarioLogueado.setAvatar(rutasAvatares[avatarSeleccionado[0]], nombresAvatares[avatarSeleccionado[0]]);
+                Login.usuarioLogueado.guardarDatos();
+
+                JOptionPane.showMessageDialog(avatarFrame, "Has elegido el avatar: " + nombresAvatares[avatarSeleccionado[0]]);
+
+                avatarFrame.dispose();
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                if (frame != null) {
+                    frame.dispose();
+                }
+                new VerPerfil().mostrarEnFrame();
+            }
+        } else {
+            JOptionPane.showMessageDialog(avatarFrame, "Por favor, selecciona un avatar antes de continuar.");
+        }
+    });
+
+    avatarFrame.add(panelAvatares, BorderLayout.CENTER);
+    avatarFrame.add(botonElegir, BorderLayout.SOUTH);
+
+    avatarFrame.setLocationRelativeTo(this);
+    avatarFrame.setVisible(true);
+}
 
     private void cambiarContraseña() {
         JPasswordField nuevaContraseña = new JPasswordField();
