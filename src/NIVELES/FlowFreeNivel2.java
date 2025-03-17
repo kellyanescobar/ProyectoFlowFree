@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class FlowFreeNivel2 extends JPanel {
+
     private final int gridSize = 5;
     private final int cellSize = 100;
     private final int[][] grid = new int[gridSize][gridSize];
@@ -46,11 +47,22 @@ public class FlowFreeNivel2 extends JPanel {
             }
 
             public void mouseReleased(MouseEvent e) {
-                if (nivelCompletado()) {
-                    JOptionPane.showMessageDialog(null, "¡Nivel 2 completado!");
-                    mapa.desbloquearNivel(2);
+                // Update the grid with the current tracings
+                for (Point p : trazoActual) {
+                    grid[p.x][p.y] = currentColor;
+                }
+
+                // Check if all cells are filled or if level is completed
+                if (todasCeldasLlenas() || nivelCompletado()) {
+                    if (nivelCompletado()) {
+                        JOptionPane.showMessageDialog(null, "¡Nivel 2 completado!");
+                        mapa.desbloquearNivel(2);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No hay más movimientos posibles.");
+                    }
                     SwingUtilities.getWindowAncestor(FlowFreeNivel2.this).dispose(); // Cierra el panel del nivel
                 }
+
                 currentColor = 0;
                 previousPoint = null;
                 repaint();
@@ -59,7 +71,9 @@ public class FlowFreeNivel2 extends JPanel {
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                if (currentColor == 0 || previousPoint == null) return;
+                if (currentColor == 0 || previousPoint == null) {
+                    return;
+                }
 
                 int x = e.getX() / cellSize;
                 int y = e.getY() / cellSize;
@@ -71,6 +85,7 @@ public class FlowFreeNivel2 extends JPanel {
                     if (colorEnCelda == 0) {
                         trazoActual.push(p);
                         previousPoint = p;
+                        grid[x][y] = currentColor; // Update the grid array
                         dibujarLineaRealTime();
                     } else if (colorEnCelda == currentColor) {
                         trazoActual.push(p);
@@ -139,6 +154,17 @@ public class FlowFreeNivel2 extends JPanel {
             }
         }
         return true;
+    }
+
+    private boolean todasCeldasLlenas() {
+        for (int x = 0; x < gridSize; x++) {
+            for (int y = 0; y < gridSize; y++) {
+                if (grid[x][y] == 0) { // Si hay alguna celda vacía
+                    return false;
+                }
+            }
+        }
+        return true; // Si no encontramos celdas vacías
     }
 
     protected void paintComponent(Graphics g) {

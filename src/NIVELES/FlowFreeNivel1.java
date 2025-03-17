@@ -50,15 +50,25 @@ public class FlowFreeNivel1 extends JPanel {
             }
 
             public void mouseReleased(MouseEvent e) {
-                if (nivelCompletado()) {
-                    JOptionPane.showMessageDialog(null, "¡Nivel 1 completado!");
-                    mapa.desbloquearNivel(1);
+                // Update the grid with the current tracings
+                for (Point p : trazoActual) {
+                    grid[p.x][p.y] = currentColor;
+                }
+                
+                // Check if all cells are filled or if level is completed
+                if (todasCeldasLlenas() || nivelCompletado()) {
+                    if (nivelCompletado()) {
+                        JOptionPane.showMessageDialog(null, "¡Nivel 1 completado!");
+                        mapa.desbloquearNivel(1);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No hay más movimientos posibles.");
+                    }
                     SwingUtilities.getWindowAncestor(FlowFreeNivel1.this).dispose(); // Cierra el panel del nivel
                 }
+                
                 currentColor = 0;
                 previousPoint = null;
                 repaint();
-                verificarCierreNivel();
             }
         });
 
@@ -76,6 +86,7 @@ public class FlowFreeNivel1 extends JPanel {
                     if (colorEnCelda == 0) {
                         trazoActual.push(p);
                         previousPoint = p;
+                        grid[x][y] = currentColor; // Update the grid array
                         dibujarLineaRealTime();
                     } else if (colorEnCelda == currentColor) {
                         trazoActual.push(p);
@@ -141,23 +152,16 @@ public class FlowFreeNivel1 extends JPanel {
         }
         return true;
     }
-
-    private boolean hayCeldasVacias() {
+    
+    private boolean todasCeldasLlenas() {
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
-                if (grid[x][y] == 0) {
-                    return true;
+                if (grid[x][y] == 0) { // Si hay alguna celda vacía
+                    return false;
                 }
             }
         }
-        return false;
-    }
-
-    private void verificarCierreNivel() {
-        if (!hayCeldasVacias()) {
-            JOptionPane.showMessageDialog(null, "¡Nivel completo sin celdas vacías!");
-            SwingUtilities.getWindowAncestor(this).dispose();
-        }
+        return true; // Si no encontramos celdas vacías
     }
 
     protected void paintComponent(Graphics g) {
