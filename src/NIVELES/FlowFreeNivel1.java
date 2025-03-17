@@ -58,6 +58,7 @@ public class FlowFreeNivel1 extends JPanel {
                 currentColor = 0;
                 previousPoint = null;
                 repaint();
+                verificarCierreNivel();
             }
         });
 
@@ -139,6 +140,24 @@ public class FlowFreeNivel1 extends JPanel {
             }
         }
         return true;
+    }
+
+    private boolean hayCeldasVacias() {
+        for (int x = 0; x < gridSize; x++) {
+            for (int y = 0; y < gridSize; y++) {
+                if (grid[x][y] == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void verificarCierreNivel() {
+        if (!hayCeldasVacias()) {
+            JOptionPane.showMessageDialog(null, "¡Nivel completo sin celdas vacías!");
+            SwingUtilities.getWindowAncestor(this).dispose();
+        }
     }
 
     protected void paintComponent(Graphics g) {
