@@ -86,7 +86,7 @@ public class MapaNivelesBonito extends JPanel {
 
         switch (nivel) {
             case 1:
-                framemapa.add(new FlowFreeNivel1(this));
+                framemapa.add(new FlowFreeNivel1(this));  
                 break;
             case 2:
                 framemapa.add(new FlowFreeNivel2(this));
@@ -107,8 +107,8 @@ public class MapaNivelesBonito extends JPanel {
 
         framemapa.pack();
         framemapa.setLocationRelativeTo(null);
+        framemapa.setResizable(false);
         framemapa.setVisible(true);
- 
         framemapa.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
@@ -138,6 +138,7 @@ public class MapaNivelesBonito extends JPanel {
         frame.add(this);
         frame.pack();
         frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 }

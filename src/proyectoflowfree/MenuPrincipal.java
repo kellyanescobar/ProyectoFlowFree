@@ -29,7 +29,7 @@ public class MenuPrincipal extends JPanel {
         verPerfil = crearBoton("Ver Perfil", new Color(0xFAC9DE), new Color(0xE61F93));
         reportes = crearBoton("Reportes", new Color(0xC8FFF7), new Color(0x00B7E7));
         cerrarSesion = crearBoton("Cerrar Sesion", new Color(0xF6B0A4), new Color(0xEA5923));
-        
+    
         add(jugar);
         add(verPerfil);
         add(reportes);
@@ -137,6 +137,7 @@ public class MenuPrincipal extends JPanel {
         frame.setContentPane(this);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
         frame.setVisible(true);
     }
     

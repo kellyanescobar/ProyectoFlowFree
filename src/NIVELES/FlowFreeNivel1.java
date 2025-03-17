@@ -11,6 +11,7 @@ package NIVELES;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -23,6 +24,8 @@ public class FlowFreeNivel1 extends JPanel {
     private Stack<Point> trazoActual = new Stack<>();
     private Point previousPoint = null;
     private int currentColor = 0;
+    private BufferedImage buffer;
+    private Graphics2D bufferGraphics;
     private MapaNivelesBonito mapa;
 
     public FlowFreeNivel1(MapaNivelesBonito mapa) {
@@ -30,6 +33,7 @@ public class FlowFreeNivel1 extends JPanel {
         setPreferredSize(new Dimension(gridSize * cellSize, gridSize * cellSize));
         setBackground(Color.BLACK);
         cargarPuntosDeLaImagen();
+        inicializarBuffer();
 
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
@@ -42,20 +46,18 @@ public class FlowFreeNivel1 extends JPanel {
                     previousPoint = p;
                     trazoActual.clear();
                     trazoActual.push(p);
-                    grid[x][y] = currentColor;
-                    repaint();
                 }
             }
 
             public void mouseReleased(MouseEvent e) {
-                currentColor = 0;
-                previousPoint = null;
-
                 if (nivelCompletado()) {
                     JOptionPane.showMessageDialog(null, "¡Nivel 1 completado!");
                     mapa.desbloquearNivel(1);
-                    SwingUtilities.getWindowAncestor(FlowFreeNivel1.this).dispose();
+                    SwingUtilities.getWindowAncestor(FlowFreeNivel1.this).dispose(); // Cierra el panel del nivel
                 }
+                currentColor = 0;
+                previousPoint = null;
+                repaint();
             }
         });
 
@@ -71,57 +73,43 @@ public class FlowFreeNivel1 extends JPanel {
                     int colorEnCelda = grid[x][y];
 
                     if (colorEnCelda == 0) {
-                        grid[x][y] = currentColor;
                         trazoActual.push(p);
                         previousPoint = p;
-                        repaint();
+                        dibujarLineaRealTime();
                     } else if (colorEnCelda == currentColor) {
                         trazoActual.push(p);
                         previousPoint = p;
-                        repaint();
+                        dibujarLineaRealTime();
                     } else {
-                        cancelarTrazo();
-                        JOptionPane.showMessageDialog(null, "Colisión con otro color. Trazo cancelado.");
+                        JOptionPane.showMessageDialog(null, "❌ No se puede cruzar con otra línea.");
                     }
                 }
             }
         });
     }
 
-   private void cancelarTrazo() {
-        boolean trazoValido = false;
-        if (!trazoActual.isEmpty()) {
-            Point lastPoint = trazoActual.peek();
-            if (startPoints.containsKey(lastPoint) && startPoints.get(lastPoint) == currentColor) {
-                trazoValido = true;
-            }
+    private void inicializarBuffer() {
+        buffer = new BufferedImage(gridSize * cellSize, gridSize * cellSize, BufferedImage.TYPE_INT_ARGB);
+        bufferGraphics = buffer.createGraphics();
+        bufferGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        bufferGraphics.setStroke(new BasicStroke(8));
+        bufferGraphics.setColor(Color.WHITE);
+    }
+
+    private void dibujarLineaRealTime() {
+        if (trazoActual.size() > 1) {
+            Point p1 = trazoActual.get(trazoActual.size() - 2);
+            Point p2 = trazoActual.peek();
+            bufferGraphics.setColor(colors[currentColor - 1]);
+
+            int x1 = p1.x * cellSize + cellSize / 2;
+            int y1 = p1.y * cellSize + cellSize / 2;
+            int x2 = p2.x * cellSize + cellSize / 2;
+            int y2 = p2.y * cellSize + cellSize / 2;
+
+            bufferGraphics.drawLine(x1, y1, x2, y2);
+            repaint();
         }
-        
-        if (!trazoValido) {
-            while (!trazoActual.isEmpty()) {
-                Point p = trazoActual.pop();
-                if (startPoints.containsKey(p)) {
-                    break;
-                } else {
-                    grid[p.x][p.y] = 0;
-                }
-            }
-        }
-        
-        currentColor = 0;
-        previousPoint = null;
-        repaint();
-        while (!trazoActual.isEmpty()) {
-            Point p = trazoActual.pop();
-            if (startPoints.containsKey(p)) {
-                break;
-            } else {
-                grid[p.x][p.y] = 0;
-            }
-        }
-        currentColor = 0;
-        previousPoint = null;
-        repaint();
     }
 
     private void cargarPuntosDeLaImagen() {
@@ -155,6 +143,8 @@ public class FlowFreeNivel1 extends JPanel {
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.drawImage(buffer, 0, 0, this);
+
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(Color.WHITE);
 
@@ -163,22 +153,6 @@ public class FlowFreeNivel1 extends JPanel {
         }
         for (int y = 0; y <= gridSize; y++) {
             g2.drawLine(0, y * cellSize, gridSize * cellSize, y * cellSize);
-        }
-
-        g2.setStroke(new BasicStroke(12));
-
-        for (int i = 0; i < trazoActual.size() - 1; i++) {
-            Point p1 = trazoActual.get(i);
-            Point p2 = trazoActual.get(i + 1);
-            int colorIndex = grid[p1.x][p1.y] - 1;
-            g2.setColor(colors[colorIndex]);
-
-            int x1 = p1.x * cellSize + cellSize / 2;
-            int y1 = p1.y * cellSize + cellSize / 2;
-            int x2 = p2.x * cellSize + cellSize / 2;
-            int y2 = p2.y * cellSize + cellSize / 2;
-
-            g2.drawLine(x1, y1, x2, y2);
         }
 
         for (Point p : startPoints.keySet()) {
