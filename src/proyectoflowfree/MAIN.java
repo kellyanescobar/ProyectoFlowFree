@@ -24,4 +24,4 @@ public class MAIN {
 //alamcenamiento de progreso
 //estadistica y lo del timpo para ganar
 //niveles en abstract
-
+//idomas

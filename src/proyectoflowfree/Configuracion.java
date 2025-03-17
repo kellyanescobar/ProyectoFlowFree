@@ -12,6 +12,10 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 import musica.musica;
@@ -20,13 +24,14 @@ import musica.musica;
  *
  * @author laraj
  */
-
-public class Configuracion extends JPanel{
+public class Configuracion extends JPanel {
 
     private JButton idioma, cambiarNombre, cambiarUsuario, cambiarContra, avatar, eliminarCuenta, volumen, regresar;
     private Image fondoImagen;
     private Clip clip;
-    private float volumenActual = 0f; 
+    private float volumenActual = 0f;
+    private Properties mensajes = new Properties();
+    private String idiomaActual = "es";
 
     private JButton[] avatares;
     private String[] nombresAvatares = {"Rosado", "Azul", "Turquesa", "Amarillo", "Rojo", "Verde"};
@@ -41,6 +46,7 @@ public class Configuracion extends JPanel{
 
     public Configuracion() {
         setLayout(null);
+        cargarIdioma(idiomaActual);
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Configuracion.png")).getImage();
 
@@ -91,8 +97,7 @@ public class Configuracion extends JPanel{
         regresar.setBounds(460, 460, 180, 50);
         regresar.addActionListener(e -> regresar());
         add(regresar);
- 
-         
+
     }
 
     private JButton crearBoton(String texto, Color bgColor, Color fgColor) {
@@ -120,17 +125,6 @@ public class Configuracion extends JPanel{
         });
 
         return boton;
-    }
-
-    private void cambiarIdioma() {
-        String[] opciones = {"Español", "Ingles"};
-        int seleccion = JOptionPane.showOptionDialog(this, "Selecciona el idioma:", "Idioma",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
-        if (seleccion == 1) {
-            JOptionPane.showMessageDialog(this, "Idioma cambiado a Ingles.");
-        } else {
-            JOptionPane.showMessageDialog(this, "Idioma cambiado a Español.");
-        }
     }
 
     private void cambiarNombre() {
@@ -256,7 +250,7 @@ public class Configuracion extends JPanel{
         JOptionPane.showMessageDialog(this, "Funcion de cambio de avatar en desarrollo, todavia me falta");
     }
 
-  private void mostrarControlDeVolumen() {
+    private void mostrarControlDeVolumen() {
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, (int) (musica.getVolume() * 100));
         slider.setMajorTickSpacing(20);
         slider.setMinorTickSpacing(5);
@@ -269,6 +263,52 @@ public class Configuracion extends JPanel{
             musica.setVolume(volumenSeleccionado);
         }
     }
+
+    private void cargarIdioma(String idioma) {
+        try {
+            // 📌 Nueva ruta para archivos dentro del paquete proyectoflowfree/idiomas/
+            String rutaArchivo = "/proyectoflowfree/idiomas/mensajes_" + idioma + ".properties";
+            InputStream archivo = getClass().getResourceAsStream(rutaArchivo);
+
+            if (archivo == null) {
+                System.out.println(" ERROR: No se encontró el archivo de idioma en " + rutaArchivo);
+                return;
+            }
+
+            mensajes.load(archivo);
+            archivo.close();
+
+            System.out.println(" Archivo de idioma cargado correctamente: " + rutaArchivo);
+        } catch (Exception e) {
+            System.out.println(" No se pudo cargar el archivo de idioma: " + e.getMessage());
+        }
+    }
+
+    private void cambiarIdioma() {
+        String[] opciones = {"Español", "English"};
+        int seleccion = JOptionPane.showOptionDialog(this, "Selecciona el idioma:", "Idioma",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
+
+        if (seleccion == 1) {
+            idiomaActual = "en"; // Cambiar a inglés
+        } else {
+            idiomaActual = "es"; // Cambiar a español
+        }
+        cargarIdioma(idiomaActual);
+        actualizarTextos();
+    }
+
+    private void actualizarTextos() {
+        idioma.setText(mensajes.getProperty("idioma"));
+        avatar.setText(mensajes.getProperty("avatar"));
+        eliminarCuenta.setText(mensajes.getProperty("eliminar_cuenta"));
+        cambiarNombre.setText(mensajes.getProperty("cambiar_nombre"));
+        cambiarUsuario.setText(mensajes.getProperty("cambiar_usuario"));
+        cambiarContra.setText(mensajes.getProperty("cambiar_contra"));
+        volumen.setText(mensajes.getProperty("volumen"));
+        regresar.setText(mensajes.getProperty("regresar"));
+    }
+
     private void regresar() {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         frame.dispose();
