@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class FlowFreeNivel2 extends JPanel {
-
     private final int gridSize = 5;
     private final int cellSize = 100;
     private final int[][] grid = new int[gridSize][gridSize];
@@ -51,7 +50,7 @@ public class FlowFreeNivel2 extends JPanel {
                 for (Point p : trazoActual) {
                     grid[p.x][p.y] = currentColor;
                 }
-
+                
                 // Check if all cells are filled or if level is completed
                 if (todasCeldasLlenas() || nivelCompletado()) {
                     if (nivelCompletado()) {
@@ -62,7 +61,7 @@ public class FlowFreeNivel2 extends JPanel {
                     }
                     SwingUtilities.getWindowAncestor(FlowFreeNivel2.this).dispose(); // Cierra el panel del nivel
                 }
-
+                
                 currentColor = 0;
                 previousPoint = null;
                 repaint();
@@ -71,9 +70,7 @@ public class FlowFreeNivel2 extends JPanel {
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                if (currentColor == 0 || previousPoint == null) {
-                    return;
-                }
+                if (currentColor == 0 || previousPoint == null) return;
 
                 int x = e.getX() / cellSize;
                 int y = e.getY() / cellSize;
@@ -83,16 +80,19 @@ public class FlowFreeNivel2 extends JPanel {
                     int colorEnCelda = grid[x][y];
 
                     if (colorEnCelda == 0) {
+                        // Moving to an empty cell
                         trazoActual.push(p);
                         previousPoint = p;
                         grid[x][y] = currentColor; // Update the grid array
                         dibujarLineaRealTime();
                     } else if (colorEnCelda == currentColor) {
+                        // Connecting to the same color - allowed
                         trazoActual.push(p);
                         previousPoint = p;
                         dibujarLineaRealTime();
                     } else {
-                        JOptionPane.showMessageDialog(null, "❌ No se puede tocar colores diferentes.");
+                        // Trying to connect to a different color - show warning
+                        JOptionPane.showMessageDialog(null, "❌ Los colores no son iguales.");
                     }
                 }
             }
@@ -155,7 +155,7 @@ public class FlowFreeNivel2 extends JPanel {
         }
         return true;
     }
-
+    
     private boolean todasCeldasLlenas() {
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
