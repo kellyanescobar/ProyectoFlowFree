@@ -10,93 +10,182 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Stack;
+import proyectoflowfree.Login;
 
 public class FlowFreeNivel2 extends JPanel {
     private final int gridSize = 5;
     private final int cellSize = 100;
     private final int[][] grid = new int[gridSize][gridSize];
-    private final Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, new Color(255, 102, 0), new Color(160, 32, 240)};
-    private final HashMap<Point, Integer> startPoints = new HashMap<>();
+    private final Color[] colors = {
+        Color.RED, Color.BLUE, Color.GREEN,
+        new Color(255, 102, 0), new Color(160, 32, 240)
+    };
     private Stack<Point> trazoActual = new Stack<>();
+    private final HashMap<Point, Integer> startPoints = new HashMap<>();
     private Point previousPoint = null;
     private int currentColor = 0;
+    private MapaNivelesBonito mapa;
     private BufferedImage buffer;
     private Graphics2D bufferGraphics;
-    private MapaNivelesBonito mapa;
+    private boolean mostrarError = false;
 
     public FlowFreeNivel2(MapaNivelesBonito mapa) {
         this.mapa = mapa;
-        setPreferredSize(new Dimension(gridSize * cellSize, gridSize * cellSize));
-        setBackground(Color.BLACK);
-        cargarPuntosDeLaImagen();
-        inicializarBuffer();
+        setLayout(new BorderLayout());
 
-        addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
-                int x = e.getX() / cellSize;
-                int y = e.getY() / cellSize;
-                Point p = new Point(x, y);
+        JPanel panelGrid = new PanelGrid();
+        JPanel panelBotones = new JPanel(new BorderLayout());
 
-                if (startPoints.containsKey(p)) {
-                    currentColor = startPoints.get(p);
-                    previousPoint = p;
-                    trazoActual.clear();
-                    trazoActual.push(p);
+         ImageIcon iconBack = new ImageIcon("C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/Imagenes/back.png");
+        Image scaledBack = iconBack.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+        JButton btnBack = new JButton(new ImageIcon(scaledBack));
+        btnBack.setContentAreaFilled(false);
+        btnBack.setBorderPainted(false);
+        btnBack.setFocusPainted(false);
+        btnBack.addActionListener(e -> volverAlMapa());
+
+        JButton btnUndo = new JButton("↩");
+        btnUndo.addActionListener(e -> deshacerPaso());
+
+        panelBotones.setBackground(Color.BLACK);
+        panelBotones.add(btnBack, BorderLayout.WEST);
+        panelBotones.add(btnUndo, BorderLayout.EAST);
+
+        add(panelGrid, BorderLayout.CENTER);
+        add(panelBotones, BorderLayout.SOUTH);
+    }
+
+    private class PanelGrid extends JPanel {
+        public PanelGrid() {
+            setPreferredSize(new Dimension(gridSize * cellSize, gridSize * cellSize));
+            setBackground(Color.BLACK);
+            cargarPuntosDeLaImagen();
+            inicializarBuffer();
+
+            addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent e) {
+                    int x = e.getX() / cellSize;
+                    int y = e.getY() / cellSize;
+                    Point p = new Point(x, y);
+
+                    if (startPoints.containsKey(p)) {
+                        currentColor = startPoints.get(p);
+                        previousPoint = p;
+                        trazoActual.clear();
+                        trazoActual.push(p);
+                        grid[x][y] = currentColor;
+                        repaint();
+                    }
                 }
-            }
 
-            public void mouseReleased(MouseEvent e) {
-                // Update the grid with the current tracings
-                for (Point p : trazoActual) {
-                    grid[p.x][p.y] = currentColor;
-                }
-                
-                // Check if all cells are filled or if level is completed
-                if (todasCeldasLlenas() || nivelCompletado()) {
+                public void mouseReleased(MouseEvent e) {
+                    for (Point p : trazoActual) {
+                        grid[p.x][p.y] = currentColor;
+                    }
                     if (nivelCompletado()) {
                         JOptionPane.showMessageDialog(null, "¡Nivel 2 completado!");
                         mapa.desbloquearNivel(2);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "No hay más movimientos posibles.");
+                        if (Login.usuarioLogueado != null) {
+                            Login.usuarioLogueado.setNivelAlcanzado(2);
+                            Login.usuarioLogueado.guardarDatos();
+                        }
+                        volverAlMapa();
                     }
-                    SwingUtilities.getWindowAncestor(FlowFreeNivel2.this).dispose(); // Cierra el panel del nivel
+                    currentColor = 0;
+                    previousPoint = null;
+                    repaint();
                 }
-                
-                currentColor = 0;
-                previousPoint = null;
-                repaint();
-            }
-        });
+            });
 
-        addMouseMotionListener(new MouseMotionAdapter() {
-            public void mouseDragged(MouseEvent e) {
-                if (currentColor == 0 || previousPoint == null) return;
+            addMouseMotionListener(new MouseMotionAdapter() {
+                public void mouseDragged(MouseEvent e) {
+                    if (currentColor == 0 || previousPoint == null) return;
 
-                int x = e.getX() / cellSize;
-                int y = e.getY() / cellSize;
-                Point p = new Point(x, y);
+                    int x = e.getX() / cellSize;
+                    int y = e.getY() / cellSize;
+                    Point p = new Point(x, y);
 
-                if (esValido(x, y) && esAdyacente(previousPoint, p)) {
-                    int colorEnCelda = grid[x][y];
+                    if (esValido(x, y) && esAdyacente(previousPoint, p)) {
+                        int colorEnCelda = grid[x][y];
 
-                    if (colorEnCelda == 0) {
-                        // Moving to an empty cell
-                        trazoActual.push(p);
-                        previousPoint = p;
-                        grid[x][y] = currentColor; // Update the grid array
-                        dibujarLineaRealTime();
-                    } else if (colorEnCelda == currentColor) {
-                        // Connecting to the same color - allowed
-                        trazoActual.push(p);
-                        previousPoint = p;
-                        dibujarLineaRealTime();
-                    } else {
-                        // Trying to connect to a different color - show warning
-                        JOptionPane.showMessageDialog(null, "❌ Los colores no son iguales.");
+                        if (startPoints.containsKey(p) && startPoints.get(p) != currentColor) {
+                            reiniciarTrazoConError();
+                            return;
+                        }
+
+                        if (colorEnCelda == 0 || colorEnCelda == currentColor) {
+                            trazoActual.push(p);
+                            previousPoint = p;
+                            grid[p.x][p.y] = currentColor;
+                            dibujarLineaRealTime();
+                        } else {
+                            reiniciarTrazoConError();
+                        }
                     }
                 }
+            });
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(buffer, 0, 0, this);
+            Graphics2D g2 = (Graphics2D) g;
+
+            g2.setColor(Color.WHITE);
+            for (int x = 0; x <= gridSize; x++) {
+                g2.drawLine(x * cellSize, 0, x * cellSize, gridSize * cellSize);
             }
-        });
+            for (int y = 0; y <= gridSize; y++) {
+                g2.drawLine(0, y * cellSize, gridSize * cellSize, y * cellSize);
+            }
+
+            int circleSize = 80;
+            int offset = (cellSize - circleSize) / 2;
+
+            for (Point p : startPoints.keySet()) {
+                g2.setColor(colors[startPoints.get(p) - 1]);
+                g2.fillOval(p.x * cellSize + offset, p.y * cellSize + offset, circleSize, circleSize);
+            }
+
+            if (mostrarError) {
+                g2.setColor(new Color(255, 0, 0, 80));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+            }
+        }
+    }
+
+    private void volverAlMapa() {
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if (frame != null) frame.dispose();
+        mapa.mostrarEnFrame();
+    }
+
+    private void deshacerPaso() {
+        if (trazoActual.isEmpty() || currentColor == 0) return;
+        Point ultimo = trazoActual.pop();
+        grid[ultimo.x][ultimo.y] = 0;
+        inicializarBuffer();
+
+        bufferGraphics.setColor(colors[currentColor - 1]);
+        for (int i = 1; i < trazoActual.size(); i++) {
+            Point p1 = trazoActual.get(i - 1);
+            Point p2 = trazoActual.get(i);
+            int x1 = p1.x * cellSize + cellSize / 2;
+            int y1 = p1.y * cellSize + cellSize / 2;
+            int x2 = p2.x * cellSize + cellSize / 2;
+            int y2 = p2.y * cellSize + cellSize / 2;
+            bufferGraphics.drawLine(x1, y1, x2, y2);
+        }
+
+        if (!trazoActual.isEmpty()) {
+            previousPoint = trazoActual.peek();
+        } else {
+            previousPoint = null;
+            currentColor = 0;
+        }
+
+        repaint();
     }
 
     private void inicializarBuffer() {
@@ -104,7 +193,6 @@ public class FlowFreeNivel2 extends JPanel {
         bufferGraphics = buffer.createGraphics();
         bufferGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         bufferGraphics.setStroke(new BasicStroke(8));
-        bufferGraphics.setColor(Color.WHITE);
     }
 
     private void dibujarLineaRealTime() {
@@ -112,12 +200,10 @@ public class FlowFreeNivel2 extends JPanel {
             Point p1 = trazoActual.get(trazoActual.size() - 2);
             Point p2 = trazoActual.peek();
             bufferGraphics.setColor(colors[currentColor - 1]);
-
             int x1 = p1.x * cellSize + cellSize / 2;
             int y1 = p1.y * cellSize + cellSize / 2;
             int x2 = p2.x * cellSize + cellSize / 2;
             int y2 = p2.y * cellSize + cellSize / 2;
-
             bufferGraphics.drawLine(x1, y1, x2, y2);
             repaint();
         }
@@ -147,43 +233,31 @@ public class FlowFreeNivel2 extends JPanel {
     }
 
     private boolean nivelCompletado() {
-        for (Point p : startPoints.keySet()) {
-            int color = startPoints.get(p);
-            if (grid[p.x][p.y] != color) {
-                return false;
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                if (grid[i][j] == 0) return false;
             }
         }
         return true;
     }
-    
-    private boolean todasCeldasLlenas() {
-        for (int x = 0; x < gridSize; x++) {
-            for (int y = 0; y < gridSize; y++) {
-                if (grid[x][y] == 0) { // Si hay alguna celda vacía
-                    return false;
-                }
+
+    private void reiniciarTrazoConError() {
+        for (Point punto : trazoActual) {
+            if (grid[punto.x][punto.y] == currentColor) {
+                grid[punto.x][punto.y] = 0;
             }
         }
-        return true; // Si no encontramos celdas vacías
-    }
+        trazoActual.clear();
+        currentColor = 0;
+        previousPoint = null;
+        repaint();
 
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(buffer, 0, 0, this);
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.WHITE);
-
-        for (int x = 0; x <= gridSize; x++) {
-            g2.drawLine(x * cellSize, 0, x * cellSize, gridSize * cellSize);
-        }
-        for (int y = 0; y <= gridSize; y++) {
-            g2.drawLine(0, y * cellSize, gridSize * cellSize, y * cellSize);
-        }
-
-        for (Point p : startPoints.keySet()) {
-            g2.setColor(colors[startPoints.get(p) - 1]);
-            g2.fillOval(p.x * cellSize + 10, p.y * cellSize + 10, 80, 80);
-        }
+        mostrarError = true;
+        Timer t = new Timer(300, evt -> {
+            mostrarError = false;
+            repaint();
+        });
+        t.setRepeats(false);
+        t.start();
     }
 }
