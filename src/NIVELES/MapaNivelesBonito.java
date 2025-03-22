@@ -34,7 +34,15 @@ public class MapaNivelesBonito extends JPanel {
         
         fondo = new ImageIcon(getClass().getResource("/imagenes/mapa2.png")).getImage();
         
-        nivelesDesbloqueados[0] = true;  
+        nivelesDesbloqueados[0] = true; 
+        
+        if (Login.usuarioLogueado != null) {
+            int nivelAlcanzado = Login.usuarioLogueado.getNivelAlcanzado(); 
+            for (int i = 0; i < nivelAlcanzado; i++) {
+            nivelesDesbloqueados[i] = true;
+    }
+}
+        
         cargarPosicionesNiveles();
         configurarBotones();
         agregarBotonRegresar();

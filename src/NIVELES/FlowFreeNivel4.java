@@ -58,9 +58,29 @@ public class FlowFreeNivel4 extends JPanel {
         btnUndo.setFocusPainted(false);
         btnUndo.addActionListener(e -> deshacerPaso());
 
+<<<<<<< HEAD
         panelBotones.setBackground(Color.BLACK);
         panelBotones.add(btnBack, BorderLayout.WEST);
         panelBotones.add(btnUndo, BorderLayout.EAST);
+=======
+                if (nivelCompletado()) {
+                    JOptionPane.showMessageDialog(null, "¡Nivel 4 completado!");
+                    mapa.desbloquearNivel(4);
+                    SwingUtilities.getWindowAncestor(FlowFreeNivel4.this).dispose();
+                }
+                // agregue esto
+                if (nivelCompletado()) {
+                JOptionPane.showMessageDialog(null, "¡Nivel 4 completado!");
+                mapa.desbloquearNivel(4);  
+
+                if (Login.usuarioLogueado != null) {
+                Login.usuarioLogueado.setNivelAlcanzado(4);
+                Login.usuarioLogueado.guardarDatos();
+    }//terme de agregar
+}
+            }
+        });
+>>>>>>> 008b48cc877f1b4fdb75a7d0721f24611b4271d3
 
         add(panelGrid, BorderLayout.CENTER);
         add(panelBotones, BorderLayout.SOUTH);

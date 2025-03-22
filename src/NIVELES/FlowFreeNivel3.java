@@ -8,12 +8,20 @@ package NIVELES;
  *
  * @author 50494
  */
+<<<<<<< HEAD
    import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Stack;
+=======
+    import javax.swing.*;
+    import java.awt.*;
+    import java.awt.event.*;
+    import java.util.HashMap;
+    import java.util.Stack;
+>>>>>>> 008b48cc877f1b4fdb75a7d0721f24611b4271d3
 import proyectoflowfree.Login;
 
 public class FlowFreeNivel3 extends JPanel {
@@ -95,9 +103,23 @@ public class FlowFreeNivel3 extends JPanel {
                         }
                         volverAlMapa();
                     }
+<<<<<<< HEAD
                     currentColor = 0;
                     previousPoint = null;
                     repaint();
+=======
+                    // agregue esto
+                if (nivelCompletado()) {
+                JOptionPane.showMessageDialog(null, "¡Nivel 3 completado!");
+                mapa.desbloquearNivel(3);  
+
+                if (Login.usuarioLogueado != null) {
+                Login.usuarioLogueado.setNivelAlcanzado(3);
+                Login.usuarioLogueado.guardarDatos();
+    }//termino de agregar
+}
+                    
+>>>>>>> 008b48cc877f1b4fdb75a7d0721f24611b4271d3
                 }
             });
 
