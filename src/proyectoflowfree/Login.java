@@ -24,6 +24,7 @@ public class Login implements Serializable {
     private String historialPartidas;
     private String avatar;
     private Map<String, String> preferencias;
+    private int nivelAlcanzado;
     
     private static final String USER_DIR = "usuarios/";
     public static Login usuarioLogueado;
@@ -202,6 +203,17 @@ public String getAvatar() {
 
 public String getAvatarNombre() {
     return nombreAvatar;
+}
+
+public void setNivelAlcanzado(int nivel) {
+    if (nivel > this.nivelAlcanzado) {  
+        this.nivelAlcanzado = nivel;
+        guardarDatos();
+    }
+}
+
+public int getNivelAlcanzado() {
+    return nivelAlcanzado;
 }
 
 }
