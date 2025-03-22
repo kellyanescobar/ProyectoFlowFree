@@ -10,6 +10,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Stack;
+import proyectoflowfree.Login;
 
 public class FlowFreeNivel2 extends JPanel {
     private final int gridSize = 5;
@@ -46,26 +47,30 @@ public class FlowFreeNivel2 extends JPanel {
             }
 
             public void mouseReleased(MouseEvent e) {
-                // Update the grid with the current tracings
-                for (Point p : trazoActual) {
-                    grid[p.x][p.y] = currentColor;
-                }
-                
-                // Check if all cells are filled or if level is completed
-                if (todasCeldasLlenas() || nivelCompletado()) {
-                    if (nivelCompletado()) {
-                        JOptionPane.showMessageDialog(null, "¡Nivel 2 completado!");
-                        mapa.desbloquearNivel(2);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "No hay más movimientos posibles.");
-                    }
-                    SwingUtilities.getWindowAncestor(FlowFreeNivel2.this).dispose(); // Cierra el panel del nivel
-                }
-                
-                currentColor = 0;
-                previousPoint = null;
-                repaint();
+    for (Point p : trazoActual) {
+        grid[p.x][p.y] = currentColor;
+    }
+
+    if (nivelCompletado()) {
+        JOptionPane.showMessageDialog(null, "¡Nivel 2 completado!");
+        mapa.desbloquearNivel(2);
+
+        if (Login.usuarioLogueado != null) {
+            if (Login.usuarioLogueado.getNivelAlcanzado() < 2) {
+                Login.usuarioLogueado.setNivelAlcanzado(2); 
             }
+        }
+        SwingUtilities.getWindowAncestor(FlowFreeNivel2.this).dispose(); 
+    } else if (todasCeldasLlenas()) {
+        JOptionPane.showMessageDialog(null, "No hay más movimientos posibles.");
+        SwingUtilities.getWindowAncestor(FlowFreeNivel2.this).dispose();
+    }
+
+    currentColor = 0;
+    previousPoint = null;
+    repaint();
+}
+
         });
 
         addMouseMotionListener(new MouseMotionAdapter() {

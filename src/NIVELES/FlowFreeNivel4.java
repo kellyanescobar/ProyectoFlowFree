@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Stack;
+import proyectoflowfree.Login;
 
 public class FlowFreeNivel4 extends JPanel {
     private final int gridSize = 8;
@@ -56,6 +57,16 @@ public class FlowFreeNivel4 extends JPanel {
                     mapa.desbloquearNivel(4);
                     SwingUtilities.getWindowAncestor(FlowFreeNivel4.this).dispose();
                 }
+                // agregue esto
+                if (nivelCompletado()) {
+                JOptionPane.showMessageDialog(null, "¡Nivel 4 completado!");
+                mapa.desbloquearNivel(4);  
+
+                if (Login.usuarioLogueado != null) {
+                Login.usuarioLogueado.setNivelAlcanzado(4);
+                Login.usuarioLogueado.guardarDatos();
+    }//terme de agregar
+}
             }
         });
 
