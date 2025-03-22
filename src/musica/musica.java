@@ -17,7 +17,7 @@ public class musica {
                     FileInputStream fileInputStream = new FileInputStream(location);
                     player = new Player(fileInputStream);
                     System.out.println("musica...");
-                    player.play(); // Espera a que termine la canción antes de repetir
+                    player.play();
                     System.out.println("Reproduciendo de nuevo...");
                 } catch (Exception e) {
                     System.out.println("Error al reproducir la música: " + e.getMessage());

@@ -54,8 +54,7 @@ public class FlowFreeNivel1 extends JPanel {
                 for (Point p : trazoActual) {
                     grid[p.x][p.y] = currentColor;
                 }
-                
-                // Check if all cells are filled or if level is completed
+            
                 if (todasCeldasLlenas() || nivelCompletado()) {
                     if (nivelCompletado()) {
                         JOptionPane.showMessageDialog(null, "¡Nivel 1 completado!");
@@ -63,7 +62,7 @@ public class FlowFreeNivel1 extends JPanel {
                     } else {
                         JOptionPane.showMessageDialog(null, "No hay más movimientos posibles.");
                     }
-                    SwingUtilities.getWindowAncestor(FlowFreeNivel1.this).dispose(); // Cierra el panel del nivel
+                    SwingUtilities.getWindowAncestor(FlowFreeNivel1.this).dispose(); 
                 }
                 
                 currentColor = 0;
@@ -86,7 +85,7 @@ public class FlowFreeNivel1 extends JPanel {
                     if (colorEnCelda == 0) {
                         trazoActual.push(p);
                         previousPoint = p;
-                        grid[x][y] = currentColor; // Update the grid array
+                        grid[x][y] = currentColor; 
                         dibujarLineaRealTime();
                     } else if (colorEnCelda == currentColor) {
                         trazoActual.push(p);
@@ -156,12 +155,12 @@ public class FlowFreeNivel1 extends JPanel {
     private boolean todasCeldasLlenas() {
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
-                if (grid[x][y] == 0) { // Si hay alguna celda vacía
+                if (grid[x][y] == 0) { 
                     return false;
                 }
             }
         }
-        return true; // Si no encontramos celdas vacías
+        return true;
     }
 
     protected void paintComponent(Graphics g) {
