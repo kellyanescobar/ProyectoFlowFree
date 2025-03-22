@@ -14,6 +14,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Stack;
+import proyectoflowfree.Login;
 
 public class FlowFreeNivel1 extends JPanel {
     private final int gridSize = 3;
@@ -54,6 +55,7 @@ public class FlowFreeNivel1 extends JPanel {
                 for (Point p : trazoActual) {
                     grid[p.x][p.y] = currentColor;
                 }
+
             
                 if (todasCeldasLlenas() || nivelCompletado()) {
                     if (nivelCompletado()) {
@@ -64,7 +66,18 @@ public class FlowFreeNivel1 extends JPanel {
                     }
                     SwingUtilities.getWindowAncestor(FlowFreeNivel1.this).dispose(); 
                 }
+              
                 
+                // agregue esto
+                if (nivelCompletado()) {
+                JOptionPane.showMessageDialog(null, "¡Nivel 1 completado!");
+                mapa.desbloquearNivel(1);  
+
+                if (Login.usuarioLogueado != null) {
+                Login.usuarioLogueado.setNivelAlcanzado(1);
+                Login.usuarioLogueado.guardarDatos();
+    }//terme de agregar
+}
                 currentColor = 0;
                 previousPoint = null;
                 repaint();

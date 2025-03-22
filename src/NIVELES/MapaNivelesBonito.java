@@ -17,22 +17,27 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import proyectoflowfree.Login;
+import proyectoflowfree.MenuPrincipal;
 
 public class MapaNivelesBonito extends JPanel {
     private final int totalNiveles = 5;
     private boolean[] nivelesDesbloqueados = new boolean[totalNiveles];
     private HashMap<Integer, Point> posicionesNiveles;
     private Image fondo;
+    private JButton botonRegresar;
+
 
     public MapaNivelesBonito() {
         setPreferredSize(new Dimension(700, 400));
-        
+        setLayout(null);
         
         fondo = new ImageIcon(getClass().getResource("/imagenes/mapa2.png")).getImage();
         
         nivelesDesbloqueados[0] = true;  
         cargarPosicionesNiveles();
         configurarBotones();
+        agregarBotonRegresar();
     }
 
     private void cargarPosicionesNiveles() {
@@ -76,8 +81,25 @@ public class MapaNivelesBonito extends JPanel {
             boton.addActionListener(e -> abrirNivel(nivel));
             add(boton);
         }
+        if(botonRegresar !=null){
+            add(botonRegresar);
+        }
+        
         revalidate();
         repaint();
+    }
+    
+    private void agregarBotonRegresar(){
+       botonRegresar = new JButton("REGRESAR");
+        botonRegresar.setFont(new Font("Pixel Font", Font.BOLD, 14));
+        botonRegresar.setForeground(Color.WHITE);
+        botonRegresar.setBackground(new Color(234, 89, 35)); 
+        botonRegresar.setBorderPainted(false);
+        botonRegresar.setFocusPainted(false);
+        botonRegresar.setBounds(540, 330, 130, 40);  
+
+        botonRegresar.addActionListener(e -> regresarMenu());
+        add(botonRegresar); 
     }
 
     private void abrirNivel(int nivel) {
@@ -122,6 +144,12 @@ public class MapaNivelesBonito extends JPanel {
             nivelesDesbloqueados[nivel] = true;
             configurarBotones(); 
         }
+    }
+    
+    private void regresarMenu(){
+        JFrame frame=(JFrame)SwingUtilities.getWindowAncestor(this);
+        frame.dispose();
+        new MenuPrincipal(Login.usuarioLogueado).mostrarEnFrame();
     }
 
     @Override
