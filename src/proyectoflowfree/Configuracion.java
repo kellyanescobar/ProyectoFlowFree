@@ -214,18 +214,28 @@ public class Configuracion extends JPanel {
     }
 
     private void cambiarContraseña() {
-        JPasswordField nuevaContraseña = new JPasswordField();
-        Object[] message = {"Nueva Contraseña:", nuevaContraseña};
-        int option = JOptionPane.showConfirmDialog(this, message, "Cambiar Contraseña", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-            String nueva = new String(nuevaContraseña.getPassword());
-            if (nueva.length() >= 5) {
-                JOptionPane.showMessageDialog(this, "Contraseña cambiada exitosamente.");
-            } else {
-                JOptionPane.showMessageDialog(this, "La contraseña debe tener al menos 5 caracteres.");
+    if (Login.usuarioLogueado == null) {
+        JOptionPane.showMessageDialog(this, "No hay usuario logueado.");
+        return;
+    }
+    JPasswordField nuevaContraseña = new JPasswordField();
+    Object[] message = {"Nueva Contraseña:", nuevaContraseña};
+    int option = JOptionPane.showConfirmDialog(this, message, "Cambiar Contraseña", JOptionPane.OK_CANCEL_OPTION);
+
+    if (option == JOptionPane.OK_OPTION) {
+        String nueva = new String(nuevaContraseña.getPassword());
+
+        if (nueva.length() >= 5) {
+            boolean cambio = Login.usuarioLogueado.cambiarContraseña(nueva);
+            if (cambio) {
+                JOptionPane.showMessageDialog(this, "¡Contraseña cambiada exitosamente!");
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "La contraseña debe tener al menos 5 caracteres.");
         }
     }
+}
+
 
     private void eliminarCuenta() {
         int confirmacion = JOptionPane.showConfirmDialog(this, "¿Esta seguro de eliminar su cuenta?", "Confirmacion",
