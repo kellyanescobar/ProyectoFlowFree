@@ -14,7 +14,7 @@ import java.io.FileInputStream;
 
 public class musica {
     private static Player player;
-    private static float volumenActual = 0.5f; // 
+    private static float volumenActual = 0.5f; 
 
     public static void PlayMusic(String location) {
         new Thread(() -> {

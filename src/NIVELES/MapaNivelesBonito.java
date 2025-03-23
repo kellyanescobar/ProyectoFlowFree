@@ -11,6 +11,7 @@ package NIVELES;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,34 +33,44 @@ public class MapaNivelesBonito extends JPanel {
 
     public MapaNivelesBonito() {
         Properties mensajes = Idioma.getMensajes();
-        
+
         setPreferredSize(new Dimension(700, 400));
         setLayout(null);
         fondo = new ImageIcon(getClass().getResource("/imagenes/mapa2.png")).getImage();
 
-        // Inicializar niveles desbloqueados correctamente, ajustando índices
-        for (int i = 0; i < totalNiveles; i++) {
-            // El nivel 1 corresponde al índice 0, así sucesivamente
-            nivelesDesbloqueados[i] = Login.usuarioLogueado != null && (i + 1) <= Login.usuarioLogueado.getNivelAlcanzado();
-        }
+        actualizarNivelesDesbloqueados();
 
         cargarPosicionesNiveles();
         configurarBotones();
         agregarBotonRegresar();
         actualizarTextos(mensajes);
     }
-    
+
+    private void actualizarNivelesDesbloqueados() {
+        int nivelAlcanzadoUsuario = 1;
+
+        if (Login.usuarioLogueado != null) {
+            nivelAlcanzadoUsuario = Login.usuarioLogueado.getNivelAlcanzado();
+        }
+
+        nivelesDesbloqueados[0] = true;
+
+        for (int i = 1; i < totalNiveles; i++) {
+            nivelesDesbloqueados[i] = (i + 1) <= nivelAlcanzadoUsuario && nivelesDesbloqueados[i - 1];
+        }
+    }
+
     private void actualizarTextos(Properties mensajes) {
-        botonRegresar.setText(mensajes.getProperty("regresar")); 
+        botonRegresar.setText(mensajes.getProperty("regresar"));
     }
 
     private void cargarPosicionesNiveles() {
         posicionesNiveles = new HashMap<>();
-        posicionesNiveles.put(0, new Point(71, 275));   // Nivel 1
-        posicionesNiveles.put(1, new Point(169, 53));   // Nivel 2
-        posicionesNiveles.put(2, new Point(303, 318));  // Nivel 3
-        posicionesNiveles.put(3, new Point(372, 104));  // Nivel 4
-        posicionesNiveles.put(4, new Point(575, 185));  // Nivel 5
+        posicionesNiveles.put(0, new Point(71, 275));
+        posicionesNiveles.put(1, new Point(169, 53));
+        posicionesNiveles.put(2, new Point(303, 318));
+        posicionesNiveles.put(3, new Point(372, 104));
+        posicionesNiveles.put(4, new Point(575, 185));
     }
 
     private void configurarBotones() {
@@ -79,11 +90,53 @@ public class MapaNivelesBonito extends JPanel {
             JButton boton;
             if (imgURL != null) {
                 ImageIcon icon = new ImageIcon(imgURL);
-                Image img = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-                boton = new JButton(new ImageIcon(img));
+                Image img = icon.getImage();
+
+                MediaTracker tracker = new MediaTracker(this);
+                tracker.addImage(img, 0);
+                try {
+                    tracker.waitForID(0);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                int width = img.getWidth(this);
+                int height = img.getHeight(this);
+
+                if (width <= 0 || height <= 0) {
+                    boton = new JButton("" + (i + 1));
+                    if (!nivelesDesbloqueados[i]) {
+                        boton.setForeground(Color.GRAY);
+                    }
+                } else {
+                    img = img.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+
+                    if (!nivelesDesbloqueados[i]) {
+                        try {
+                            img = convertirAGris(img);
+                        } catch (Exception e) {
+                            boton = new JButton("" + (i + 1));
+                            boton.setForeground(Color.GRAY);
+                            boton.setContentAreaFilled(false);
+                            boton.setFocusPainted(false);
+                            boton.setOpaque(false);
+                            boton.setBounds(pos.x - 25, pos.y - 25, 50, 50);
+                            boton.setEnabled(nivelesDesbloqueados[i]);
+                            int nivel = i + 1;
+                            boton.addActionListener(e2 -> abrirNivel(nivel));
+                            add(boton);
+                            continue;
+                        }
+                    }
+
+                    boton = new JButton(new ImageIcon(img));
+                }
             } else {
-                //System.out.println("Imagen no encontrada: " + rutaImagen);
                 boton = new JButton("" + (i + 1));
+
+                if (!nivelesDesbloqueados[i]) {
+                    boton.setForeground(Color.GRAY);
+                }
             }
             boton.setContentAreaFilled(false);
             boton.setFocusPainted(false);
@@ -102,6 +155,48 @@ public class MapaNivelesBonito extends JPanel {
         repaint();
     }
 
+    private Image convertirAGris(Image imagenOriginal) {
+        MediaTracker tracker = new MediaTracker(this);
+        tracker.addImage(imagenOriginal, 0);
+        try {
+            tracker.waitForID(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return imagenOriginal;
+        }
+
+        int width = imagenOriginal.getWidth(this);
+        int height = imagenOriginal.getHeight(this);
+
+        if (width <= 0 || height <= 0) {
+            return imagenOriginal;
+        }
+
+        BufferedImage buffImg = new BufferedImage(
+                width,
+                height,
+                BufferedImage.TYPE_INT_ARGB);
+
+        Graphics g = buffImg.getGraphics();
+        g.drawImage(imagenOriginal, 0, 0, width, height, this);
+        g.dispose();
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                int rgb = buffImg.getRGB(x, y);
+                int alpha = (rgb >> 24) & 0xff;
+                int r = (rgb >> 16) & 0xff;
+                int g1 = (rgb >> 8) & 0xff;
+                int b = rgb & 0xff;
+                int gris = (int) (0.299 * r + 0.587 * g1 + 0.114 * b);
+                int nuevoRGB = (alpha << 24) | (gris << 16) | (gris << 8) | gris;
+                buffImg.setRGB(x, y, nuevoRGB);
+            }
+        }
+
+        return buffImg;
+    }
+
     private void agregarBotonRegresar() {
         botonRegresar = new JButton("REGRESAR");
         botonRegresar.setFont(new Font("Pixel Font", Font.BOLD, 14));
@@ -116,6 +211,13 @@ public class MapaNivelesBonito extends JPanel {
     }
 
     private void abrirNivel(int nivel) {
+        int indiceNivel = nivel - 1;
+
+        if (!nivelesDesbloqueados[indiceNivel]) {
+            JOptionPane.showMessageDialog(this, "Debes completar el nivel anterior primero.");
+            return;
+        }
+
         JFrame framemapa = new JFrame("Nivel " + nivel);
         framemapa.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -153,22 +255,34 @@ public class MapaNivelesBonito extends JPanel {
     }
 
     public void desbloquearNivel(int nivelCompletado) {
-        // Corregido: ajustar el índice del nivel completado y el siguiente
-        int indiceNivelCompletado = nivelCompletado - 1; // Nivel 1 -> índice 0
-        int indiceSiguienteNivel = nivelCompletado; // Siguiente nivel (el que queremos desbloquear)
-        
-        // Verifica que no sea el último nivel
+        int indiceNivelCompletado = nivelCompletado - 1;
+        int indiceSiguienteNivel = nivelCompletado;
+
         if (indiceSiguienteNivel < totalNiveles) {
-            // Actualiza el nivel alcanzado en el usuario logueado si es mayor
             if (Login.usuarioLogueado != null && Login.usuarioLogueado.getNivelAlcanzado() <= nivelCompletado) {
                 Login.usuarioLogueado.setNivelAlcanzado(nivelCompletado + 1);
+                Login.usuarioLogueado.guardarDatos();
             }
-            
-            // Desbloquea el siguiente nivel
-            nivelesDesbloqueados[indiceSiguienteNivel] = true;
-            
-            // Actualiza los botones para reflejar el cambio
+
+            actualizarNivelesDesbloqueados();
             configurarBotones();
+        } else if (nivelCompletado == totalNiveles) {
+            new Thread(() -> {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Felicidades! Has completado todos los niveles del juego",
+                        "Juego completado",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+                });
+            }).start();
         }
     }
 
