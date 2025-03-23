@@ -17,6 +17,7 @@ import java.util.Stack;
 import proyectoflowfree.Login;
 
 public class FlowFreeNivel1 extends JPanel {
+
     private final int gridSize = 3;
     private final int cellSize = 100;
     private final int[][] grid = new int[gridSize][gridSize];
@@ -37,7 +38,6 @@ public class FlowFreeNivel1 extends JPanel {
         JPanel panelGrid = new PanelGrid();
         JPanel panelBotones = new JPanel(new BorderLayout());
 
-        
         ImageIcon iconBack = new ImageIcon("C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/Imagenes/back.png");
         Image scaledBack = iconBack.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
         JButton btnBack = new JButton(new ImageIcon(scaledBack));
@@ -63,6 +63,7 @@ public class FlowFreeNivel1 extends JPanel {
     }
 
     private class PanelGrid extends JPanel {
+
         public PanelGrid() {
             setPreferredSize(new Dimension(gridSize * cellSize, gridSize * cellSize));
             setBackground(Color.BLACK);
@@ -106,7 +107,9 @@ public class FlowFreeNivel1 extends JPanel {
 
             addMouseMotionListener(new MouseMotionAdapter() {
                 public void mouseDragged(MouseEvent e) {
-                    if (currentColor == 0 || previousPoint == null) return;
+                    if (currentColor == 0 || previousPoint == null) {
+                        return;
+                    }
 
                     int x = e.getX() / cellSize;
                     int y = e.getY() / cellSize;
@@ -164,16 +167,23 @@ public class FlowFreeNivel1 extends JPanel {
 
     private void volverAlMapa() {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        if (frame != null) frame.dispose();
+        if (frame != null) {
+            frame.dispose();
+        }
         mapa.mostrarEnFrame();
     }
 
-    private void deshacerPaso() {
-        if (trazoActual.isEmpty() || currentColor == 0) return;
-        Point ultimo = trazoActual.pop();
-        grid[ultimo.x][ultimo.y] = 0;
-        inicializarBuffer();
+   private void deshacerPaso() {
+    if (trazoActual == null || trazoActual.isEmpty()) {
+        return;
+    }
 
+    Point ultimo = trazoActual.pop();
+    grid[ultimo.x][ultimo.y] = 0;
+
+    inicializarBuffer();
+
+    if (!trazoActual.isEmpty() && currentColor > 0) {
         bufferGraphics.setColor(colors[currentColor - 1]);
         for (int i = 1; i < trazoActual.size(); i++) {
             Point p1 = trazoActual.get(i - 1);
@@ -184,22 +194,24 @@ public class FlowFreeNivel1 extends JPanel {
             int y2 = p2.y * cellSize + cellSize / 2;
             bufferGraphics.drawLine(x1, y1, x2, y2);
         }
-
-        if (!trazoActual.isEmpty()) {
-            previousPoint = trazoActual.peek();
-        } else {
-            previousPoint = null;
-            currentColor = 0;
-        }
-
-        repaint();
     }
 
+    if (!trazoActual.isEmpty()) {
+        previousPoint = trazoActual.peek();
+    } else {
+        previousPoint = null;
+        currentColor = 0;
+    }
+
+    repaint();
+}
+   
     private void inicializarBuffer() {
         buffer = new BufferedImage(gridSize * cellSize, gridSize * cellSize, BufferedImage.TYPE_INT_ARGB);
         bufferGraphics = buffer.createGraphics();
         bufferGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         bufferGraphics.setStroke(new BasicStroke(8));
+        repaint(); // <- Agregado
     }
 
     private void dibujarLineaRealTime() {
@@ -238,7 +250,9 @@ public class FlowFreeNivel1 extends JPanel {
     private boolean nivelCompletado() {
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
-                if (grid[i][j] == 0) return false;
+                if (grid[i][j] == 0) {
+                    return false;
+                }
             }
         }
         return true;

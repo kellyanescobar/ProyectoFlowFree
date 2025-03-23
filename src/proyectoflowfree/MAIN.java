@@ -12,14 +12,15 @@ import static musica.musica.PlayMusic;
  * @author 50494
  */
 public class MAIN {
-    public static void main(String[] args) {
-            SwingUtilities.invokeLater(() -> new MenuInicio().mostrarEnFrame());
-            String musicapath = "C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/musica/musica de elevador.mp3";
-            PlayMusic(musicapath);
-    }
-    
-}
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new MenuInicio().mostrarEnFrame());
+        String musicapath = "C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/musica/musica de elevador.mp3";
+        PlayMusic(musicapath);
+    }
+
+}
+//modificar restriccion de mapa con 
 //alamcenamiento de progreso
 //estadistica y lo del timpo para ganar
 //niveles en abstract

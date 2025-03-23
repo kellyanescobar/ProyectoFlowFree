@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package NIVELES;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -168,12 +167,17 @@ public class FlowFreeNivel2 extends JPanel {
         mapa.mostrarEnFrame();
     }
 
-    private void deshacerPaso() {
-        if (trazoActual.isEmpty() || currentColor == 0) return;
-        Point ultimo = trazoActual.pop();
-        grid[ultimo.x][ultimo.y] = 0;
-        inicializarBuffer();
+   private void deshacerPaso() {
+    if (trazoActual == null || trazoActual.isEmpty()) {
+        return;
+    }
 
+    Point ultimo = trazoActual.pop();
+    grid[ultimo.x][ultimo.y] = 0;
+
+    inicializarBuffer();
+
+    if (!trazoActual.isEmpty() && currentColor > 0) {
         bufferGraphics.setColor(colors[currentColor - 1]);
         for (int i = 1; i < trazoActual.size(); i++) {
             Point p1 = trazoActual.get(i - 1);
@@ -184,16 +188,17 @@ public class FlowFreeNivel2 extends JPanel {
             int y2 = p2.y * cellSize + cellSize / 2;
             bufferGraphics.drawLine(x1, y1, x2, y2);
         }
-
-        if (!trazoActual.isEmpty()) {
-            previousPoint = trazoActual.peek();
-        } else {
-            previousPoint = null;
-            currentColor = 0;
-        }
-
-        repaint();
     }
+
+    if (!trazoActual.isEmpty()) {
+        previousPoint = trazoActual.peek();
+    } else {
+        previousPoint = null;
+        currentColor = 0;
+    }
+
+    repaint();
+}
 
     private void inicializarBuffer() {
         buffer = new BufferedImage(gridSize * cellSize, gridSize * cellSize, BufferedImage.TYPE_INT_ARGB);

@@ -21,28 +21,22 @@ import proyectoflowfree.Login;
 import proyectoflowfree.MenuPrincipal;
 
 public class MapaNivelesBonito extends JPanel {
+
     private final int totalNiveles = 5;
     private boolean[] nivelesDesbloqueados = new boolean[totalNiveles];
     private HashMap<Integer, Point> posicionesNiveles;
     private Image fondo;
     private JButton botonRegresar;
 
-
     public MapaNivelesBonito() {
         setPreferredSize(new Dimension(700, 400));
         setLayout(null);
-        
         fondo = new ImageIcon(getClass().getResource("/imagenes/mapa2.png")).getImage();
-        
-        nivelesDesbloqueados[0] = true; 
-        
-        if (Login.usuarioLogueado != null) {
-            int nivelAlcanzado = Login.usuarioLogueado.getNivelAlcanzado(); 
-            for (int i = 0; i < nivelAlcanzado; i++) {
-            nivelesDesbloqueados[i] = true;
-    }
-}
-        
+
+        for (int i = 0; i < totalNiveles; i++) {
+            nivelesDesbloqueados[i] = Login.usuarioLogueado != null && i < Login.usuarioLogueado.getNivelAlcanzado();
+        }
+
         cargarPosicionesNiveles();
         configurarBotones();
         agregarBotonRegresar();
@@ -78,10 +72,10 @@ public class MapaNivelesBonito extends JPanel {
                 boton = new JButton(new ImageIcon(img));
             } else {
                 //System.out.println("Imagen no encontrada: " + rutaImagen);
-                boton = new JButton("" + (i + 1)); 
+                boton = new JButton("" + (i + 1));
             }
             boton.setContentAreaFilled(false);
-            boton.setFocusPainted(false);      
+            boton.setFocusPainted(false);
             boton.setOpaque(false);
             boton.setBounds(pos.x - 25, pos.y - 25, 50, 50);
             boton.setEnabled(nivelesDesbloqueados[i]);
@@ -89,25 +83,25 @@ public class MapaNivelesBonito extends JPanel {
             boton.addActionListener(e -> abrirNivel(nivel));
             add(boton);
         }
-        if(botonRegresar !=null){
+        if (botonRegresar != null) {
             add(botonRegresar);
         }
-        
+
         revalidate();
         repaint();
     }
-    
-    private void agregarBotonRegresar(){
-       botonRegresar = new JButton("REGRESAR");
+
+    private void agregarBotonRegresar() {
+        botonRegresar = new JButton("REGRESAR");
         botonRegresar.setFont(new Font("Pixel Font", Font.BOLD, 14));
         botonRegresar.setForeground(Color.WHITE);
-        botonRegresar.setBackground(new Color(234, 89, 35)); 
+        botonRegresar.setBackground(new Color(234, 89, 35));
         botonRegresar.setBorderPainted(false);
         botonRegresar.setFocusPainted(false);
-        botonRegresar.setBounds(540, 330, 130, 40);  
+        botonRegresar.setBounds(540, 330, 130, 40);
 
         botonRegresar.addActionListener(e -> regresarMenu());
-        add(botonRegresar); 
+        add(botonRegresar);
     }
 
     private void abrirNivel(int nivel) {
@@ -116,7 +110,7 @@ public class MapaNivelesBonito extends JPanel {
 
         switch (nivel) {
             case 1:
-                framemapa.add(new FlowFreeNivel1(this));  
+                framemapa.add(new FlowFreeNivel1(this));
                 break;
             case 2:
                 framemapa.add(new FlowFreeNivel2(this));
@@ -147,15 +141,25 @@ public class MapaNivelesBonito extends JPanel {
         });
     }
 
-    public void desbloquearNivel(int nivel) {
-        if (nivel < totalNiveles) {
-            nivelesDesbloqueados[nivel] = true;
-            configurarBotones(); 
+    public void desbloquearNivel(int nivelCompletado) {
+        if (nivelCompletado < totalNiveles) {
+            int siguienteNivel = nivelCompletado + 1;
+
+            // Verifica si el siguiente nivel aún no está desbloqueado
+            if (Login.usuarioLogueado.getNivelAlcanzado() <= nivelCompletado) {
+                Login.usuarioLogueado.setNivelAlcanzado(siguienteNivel);
+            }
+
+            if (siguienteNivel < totalNiveles) {
+                nivelesDesbloqueados[siguienteNivel] = true;
+            }
+
+            configurarBotones();
         }
     }
-    
-    private void regresarMenu(){
-        JFrame frame=(JFrame)SwingUtilities.getWindowAncestor(this);
+
+    private void regresarMenu() {
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         frame.dispose();
         new MenuPrincipal(Login.usuarioLogueado).mostrarEnFrame();
     }
