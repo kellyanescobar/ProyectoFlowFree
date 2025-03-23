@@ -42,45 +42,27 @@ public class FlowFreeNivel4 extends JPanel {
         JPanel panelGrid = new PanelGrid();
         JPanel panelBotones = new JPanel(new BorderLayout());
 
+        
         ImageIcon iconBack = new ImageIcon("C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/Imagenes/back.png");
         Image scaledBack = iconBack.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
         JButton btnBack = new JButton(new ImageIcon(scaledBack));
         btnBack.setContentAreaFilled(false);
         btnBack.setBorderPainted(false);
         btnBack.setFocusPainted(false);
-        btnBack.addActionListener(e -> volverAlMapa()); 
+        btnBack.addActionListener(e -> volverAlMapa());
 
         ImageIcon iconbtnUndo = new ImageIcon("C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/Imagenes/undo.png");
-        Image scaledUndo = iconbtnUndo.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
+        Image scaledUndo = iconbtnUndo.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
         JButton btnUndo = new JButton(new ImageIcon(scaledUndo));
         btnUndo.setContentAreaFilled(false);
         btnUndo.setBorderPainted(false);
         btnUndo.setFocusPainted(false);
         btnUndo.addActionListener(e -> deshacerPaso());
 
-<<<<<<< HEAD
+
         panelBotones.setBackground(Color.BLACK);
         panelBotones.add(btnBack, BorderLayout.WEST);
         panelBotones.add(btnUndo, BorderLayout.EAST);
-=======
-                if (nivelCompletado()) {
-                    JOptionPane.showMessageDialog(null, "¡Nivel 4 completado!");
-                    mapa.desbloquearNivel(4);
-                    SwingUtilities.getWindowAncestor(FlowFreeNivel4.this).dispose();
-                }
-                // agregue esto
-                if (nivelCompletado()) {
-                JOptionPane.showMessageDialog(null, "¡Nivel 4 completado!");
-                mapa.desbloquearNivel(4);  
-
-                if (Login.usuarioLogueado != null) {
-                Login.usuarioLogueado.setNivelAlcanzado(4);
-                Login.usuarioLogueado.guardarDatos();
-    }//terme de agregar
-}
-            }
-        });
->>>>>>> 008b48cc877f1b4fdb75a7d0721f24611b4271d3
 
         add(panelGrid, BorderLayout.CENTER);
         add(panelBotones, BorderLayout.SOUTH);

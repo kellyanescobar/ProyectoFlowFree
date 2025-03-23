@@ -36,7 +36,8 @@ public class FlowFreeNivel2 extends JPanel {
         JPanel panelGrid = new PanelGrid();
         JPanel panelBotones = new JPanel(new BorderLayout());
 
-         ImageIcon iconBack = new ImageIcon("C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/Imagenes/back.png");
+          
+        ImageIcon iconBack = new ImageIcon("C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/Imagenes/back.png");
         Image scaledBack = iconBack.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
         JButton btnBack = new JButton(new ImageIcon(scaledBack));
         btnBack.setContentAreaFilled(false);
@@ -44,8 +45,14 @@ public class FlowFreeNivel2 extends JPanel {
         btnBack.setFocusPainted(false);
         btnBack.addActionListener(e -> volverAlMapa());
 
-        JButton btnUndo = new JButton("↩");
+        ImageIcon iconbtnUndo = new ImageIcon("C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/Imagenes/undo.png");
+        Image scaledUndo = iconbtnUndo.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+        JButton btnUndo = new JButton(new ImageIcon(scaledUndo));
+        btnUndo.setContentAreaFilled(false);
+        btnUndo.setBorderPainted(false);
+        btnUndo.setFocusPainted(false);
         btnUndo.addActionListener(e -> deshacerPaso());
+
 
         panelBotones.setBackground(Color.BLACK);
         panelBotones.add(btnBack, BorderLayout.WEST);
@@ -78,7 +85,6 @@ public class FlowFreeNivel2 extends JPanel {
                     }
                 }
 
-<<<<<<< HEAD
                 public void mouseReleased(MouseEvent e) {
                     for (Point p : trazoActual) {
                         grid[p.x][p.y] = currentColor;
@@ -97,34 +103,6 @@ public class FlowFreeNivel2 extends JPanel {
                     repaint();
                 }
             });
-=======
-            public void mouseReleased(MouseEvent e) {
-    for (Point p : trazoActual) {
-        grid[p.x][p.y] = currentColor;
-    }
-
-    if (nivelCompletado()) {
-        JOptionPane.showMessageDialog(null, "¡Nivel 2 completado!");
-        mapa.desbloquearNivel(2);
-
-        if (Login.usuarioLogueado != null) {
-            if (Login.usuarioLogueado.getNivelAlcanzado() < 2) {
-                Login.usuarioLogueado.setNivelAlcanzado(2); 
-            }
-        }
-        SwingUtilities.getWindowAncestor(FlowFreeNivel2.this).dispose(); 
-    } else if (todasCeldasLlenas()) {
-        JOptionPane.showMessageDialog(null, "No hay más movimientos posibles.");
-        SwingUtilities.getWindowAncestor(FlowFreeNivel2.this).dispose();
-    }
-
-    currentColor = 0;
-    previousPoint = null;
-    repaint();
-}
-
-        });
->>>>>>> 008b48cc877f1b4fdb75a7d0721f24611b4271d3
 
             addMouseMotionListener(new MouseMotionAdapter() {
                 public void mouseDragged(MouseEvent e) {

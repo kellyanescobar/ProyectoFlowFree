@@ -8,20 +8,12 @@ package NIVELES;
  *
  * @author 50494
  */
-<<<<<<< HEAD
    import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Stack;
-=======
-    import javax.swing.*;
-    import java.awt.*;
-    import java.awt.event.*;
-    import java.util.HashMap;
-    import java.util.Stack;
->>>>>>> 008b48cc877f1b4fdb75a7d0721f24611b4271d3
 import proyectoflowfree.Login;
 
 public class FlowFreeNivel3 extends JPanel {
@@ -48,7 +40,8 @@ public class FlowFreeNivel3 extends JPanel {
         JPanel panelGrid = new PanelGrid();
         JPanel panelBotones = new JPanel(new BorderLayout());
 
-         ImageIcon iconBack = new ImageIcon("C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/Imagenes/back.png");
+       
+        ImageIcon iconBack = new ImageIcon("C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/Imagenes/back.png");
         Image scaledBack = iconBack.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
         JButton btnBack = new JButton(new ImageIcon(scaledBack));
         btnBack.setContentAreaFilled(false);
@@ -56,7 +49,12 @@ public class FlowFreeNivel3 extends JPanel {
         btnBack.setFocusPainted(false);
         btnBack.addActionListener(e -> volverAlMapa());
 
-        JButton btnUndo = new JButton("↩");
+        ImageIcon iconbtnUndo = new ImageIcon("C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/Imagenes/undo.png");
+        Image scaledUndo = iconbtnUndo.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+        JButton btnUndo = new JButton(new ImageIcon(scaledUndo));
+        btnUndo.setContentAreaFilled(false);
+        btnUndo.setBorderPainted(false);
+        btnUndo.setFocusPainted(false);
         btnUndo.addActionListener(e -> deshacerPaso());
 
         panelBotones.setBackground(Color.BLACK);
@@ -103,23 +101,9 @@ public class FlowFreeNivel3 extends JPanel {
                         }
                         volverAlMapa();
                     }
-<<<<<<< HEAD
                     currentColor = 0;
                     previousPoint = null;
                     repaint();
-=======
-                    // agregue esto
-                if (nivelCompletado()) {
-                JOptionPane.showMessageDialog(null, "¡Nivel 3 completado!");
-                mapa.desbloquearNivel(3);  
-
-                if (Login.usuarioLogueado != null) {
-                Login.usuarioLogueado.setNivelAlcanzado(3);
-                Login.usuarioLogueado.guardarDatos();
-    }//termino de agregar
-}
-                    
->>>>>>> 008b48cc877f1b4fdb75a7d0721f24611b4271d3
                 }
             });
 
