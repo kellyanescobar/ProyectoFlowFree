@@ -8,7 +8,6 @@ package NIVELES;
  *
  * @author 50494
  */
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,6 +19,7 @@ import javax.swing.Timer;
 import proyectoflowfree.Login;
 
 public abstract class FlowFreeBase extends JPanel {
+
     protected int gridSize;
     protected int cellSize;
     protected int[][] grid;
@@ -68,6 +68,7 @@ public abstract class FlowFreeBase extends JPanel {
     }
 
     private class PanelGrid extends JPanel {
+
         public PanelGrid() {
             setPreferredSize(new Dimension(gridSize * cellSize, gridSize * cellSize));
             setBackground(Color.BLACK);
@@ -97,12 +98,18 @@ public abstract class FlowFreeBase extends JPanel {
                     if (nivelCompletado()) {
                         JOptionPane.showMessageDialog(null, "¡Nivel " + numeroNivel() + " completado!");
                         mapa.desbloquearNivel(numeroNivel());
+
                         if (Login.usuarioLogueado != null) {
-                            Login.usuarioLogueado.setNivelAlcanzado(numeroNivel());
-                            Login.usuarioLogueado.guardarDatos();
+                          
+                            new Thread(() -> Login.usuarioLogueado.guardarDatos()).start(); //hilos
                         }
-                        volverAlMapa();
+
+                      
+                        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(FlowFreeBase.this);
+                        CargaEntreNiveles carga = new CargaEntreNiveles(frame);
+                        carga.mostrarPor(2000, FlowFreeBase.this::volverAlMapa);
                     }
+
                     currentColor = 0;
                     previousPoint = null;
                     repaint();
@@ -111,7 +118,9 @@ public abstract class FlowFreeBase extends JPanel {
 
             addMouseMotionListener(new MouseMotionAdapter() {
                 public void mouseDragged(MouseEvent e) {
-                    if (currentColor == 0 || previousPoint == null) return;
+                    if (currentColor == 0 || previousPoint == null) {
+                        return;
+                    }
 
                     int x = e.getX() / cellSize;
                     int y = e.getY() / cellSize;
@@ -169,12 +178,16 @@ public abstract class FlowFreeBase extends JPanel {
 
     protected void volverAlMapa() {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        if (frame != null) frame.dispose();
+        if (frame != null) {
+            frame.dispose();
+        }
         mapa.mostrarEnFrame();
     }
 
     protected void deshacerPaso() {
-        if (trazoActual.isEmpty()) return;
+        if (trazoActual.isEmpty()) {
+            return;
+        }
 
         Point ultimo = trazoActual.pop();
         grid[ultimo.x][ultimo.y] = 0;
@@ -195,7 +208,9 @@ public abstract class FlowFreeBase extends JPanel {
         }
 
         previousPoint = trazoActual.isEmpty() ? null : trazoActual.peek();
-        if (trazoActual.isEmpty()) currentColor = 0;
+        if (trazoActual.isEmpty()) {
+            currentColor = 0;
+        }
 
         repaint();
     }
@@ -233,7 +248,7 @@ public abstract class FlowFreeBase extends JPanel {
         repaint();
 
         mostrarError = true;
-        Timer t = new Timer(300, e -> {
+        Timer t = new Timer(300, e -> { //hilos para que se muestra la pantalla en rojo
             mostrarError = false;
             repaint();
         });
@@ -253,6 +268,8 @@ public abstract class FlowFreeBase extends JPanel {
 
     // Métodos abstractos
     protected abstract void cargarPuntosDeLaImagen();
+
     protected abstract boolean nivelCompletado();
+
     protected abstract int numeroNivel();
 }

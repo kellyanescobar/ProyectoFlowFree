@@ -23,5 +23,4 @@ public class MAIN {
 //modificar restriccion de mapa con 
 //alamcenamiento de progreso
 //estadistica y lo del timpo para ganar
-//niveles en abstract
 //idomas
