@@ -32,7 +32,7 @@ public class Reportes extends JPanel {
         icono.setBounds(300, 20, 200, 100);
         add(icono);
 
-        titulo = new JLabel("REPORTES", SwingConstants.CENTER);
+        titulo = new JLabel("Reportes", SwingConstants.CENTER);
         titulo.setFont(new Font("Pixel Font", Font.BOLD, 24));
         titulo.setForeground(Color.BLACK);
         titulo.setBounds(280, 130, 250, 50);

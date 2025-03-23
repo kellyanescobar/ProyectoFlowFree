@@ -7,6 +7,7 @@ package proyectoflowfree;
 import javax.swing.SwingUtilities;
 import static musica.musica.PlayMusic;
 
+
 /**
  *
  * @author 50494
@@ -21,6 +22,6 @@ public class MAIN {
 
 }
 //modificar restriccion de mapa con 
-//alamcenamiento de progreso
 //estadistica y lo del timpo para ganar
-//idomas
+//volumen
+

@@ -38,7 +38,7 @@ public class Configuracion extends JPanel {
     public Configuracion() {
         setLayout(null);
         cargarIdioma(idiomaActual);
-        Idioma.setIdiomaActual("en"); 
+        Idioma.setIdiomaActual("en");
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Configuracion.png")).getImage();
 
@@ -242,7 +242,7 @@ public class Configuracion extends JPanel {
         JOptionPane.showMessageDialog(this, "Funcion de cambio de avatar en desarrollo, todavia me falta");
     }
 
-    private void mostrarControlDeVolumen() {
+      private void mostrarControlDeVolumen() {
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, (int) (musica.getVolume() * 100));
         slider.setMajorTickSpacing(20);
         slider.setMinorTickSpacing(5);
@@ -276,19 +276,18 @@ public class Configuracion extends JPanel {
     }
 
     private void cambiarIdioma() {
-    String[] opciones = {"Español", "English"};
-    int seleccion = JOptionPane.showOptionDialog(this, "Selecciona el idioma:", "Idioma",
-            JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
+        String[] opciones = {"Español", "English"};
+        int seleccion = JOptionPane.showOptionDialog(this, "Selecciona el idioma:", "Idioma",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
 
-    if (seleccion == 1) {
-        Idioma.setIdiomaActual("en");  // Guarda el idioma globalmente
-    } else {
-        Idioma.setIdiomaActual("es");
+        if (seleccion == 1) {
+            Idioma.setIdiomaActual("en");  // Guarda el idioma globalmente
+        } else {
+            Idioma.setIdiomaActual("es");
+        }
+        cargarIdioma(Idioma.getIdiomaActual());
+        actualizarTextos();
     }
-    cargarIdioma(Idioma.getIdiomaActual());
-    actualizarTextos();
-}
-
 
     private void actualizarTextos() {
         idioma.setText(mensajes.getProperty("idioma"));

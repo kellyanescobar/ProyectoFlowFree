@@ -3,6 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package musica;
+
+/**
+ *
+ * @author 50494
+ */
+
 import javazoom.jl.player.Player;
 import java.io.FileInputStream;
 
