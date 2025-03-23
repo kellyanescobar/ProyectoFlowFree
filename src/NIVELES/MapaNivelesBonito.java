@@ -37,20 +37,21 @@ public class MapaNivelesBonito extends JPanel {
         setLayout(null);
         fondo = new ImageIcon(getClass().getResource("/imagenes/mapa2.png")).getImage();
 
+        // Inicializar niveles desbloqueados correctamente, ajustando índices
         for (int i = 0; i < totalNiveles; i++) {
-            nivelesDesbloqueados[i] = Login.usuarioLogueado != null && i < Login.usuarioLogueado.getNivelAlcanzado();
+            // El nivel 1 corresponde al índice 0, así sucesivamente
+            nivelesDesbloqueados[i] = Login.usuarioLogueado != null && (i + 1) <= Login.usuarioLogueado.getNivelAlcanzado();
         }
 
         cargarPosicionesNiveles();
         configurarBotones();
         agregarBotonRegresar();
         actualizarTextos(mensajes);
-
     }
     
     private void actualizarTextos(Properties mensajes) {
-    botonRegresar.setText(mensajes.getProperty("regresar")); 
-}
+        botonRegresar.setText(mensajes.getProperty("regresar")); 
+    }
 
     private void cargarPosicionesNiveles() {
         posicionesNiveles = new HashMap<>();
@@ -152,18 +153,21 @@ public class MapaNivelesBonito extends JPanel {
     }
 
     public void desbloquearNivel(int nivelCompletado) {
-        if (nivelCompletado < totalNiveles) {
-            int siguienteNivel = nivelCompletado + 1;
-
-            // Verifica si el siguiente nivel aún no está desbloqueado
-            if (Login.usuarioLogueado.getNivelAlcanzado() <= nivelCompletado) {
-                Login.usuarioLogueado.setNivelAlcanzado(siguienteNivel);
+        // Corregido: ajustar el índice del nivel completado y el siguiente
+        int indiceNivelCompletado = nivelCompletado - 1; // Nivel 1 -> índice 0
+        int indiceSiguienteNivel = nivelCompletado; // Siguiente nivel (el que queremos desbloquear)
+        
+        // Verifica que no sea el último nivel
+        if (indiceSiguienteNivel < totalNiveles) {
+            // Actualiza el nivel alcanzado en el usuario logueado si es mayor
+            if (Login.usuarioLogueado != null && Login.usuarioLogueado.getNivelAlcanzado() <= nivelCompletado) {
+                Login.usuarioLogueado.setNivelAlcanzado(nivelCompletado + 1);
             }
-
-            if (siguienteNivel < totalNiveles) {
-                nivelesDesbloqueados[siguienteNivel] = true;
-            }
-
+            
+            // Desbloquea el siguiente nivel
+            nivelesDesbloqueados[indiceSiguienteNivel] = true;
+            
+            // Actualiza los botones para reflejar el cambio
             configurarBotones();
         }
     }
