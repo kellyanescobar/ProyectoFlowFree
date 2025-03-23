@@ -15,8 +15,10 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import proyectoflowfree.Idioma;
 import proyectoflowfree.Login;
 import proyectoflowfree.MenuPrincipal;
 
@@ -29,6 +31,8 @@ public class MapaNivelesBonito extends JPanel {
     private JButton botonRegresar;
 
     public MapaNivelesBonito() {
+        Properties mensajes = Idioma.getMensajes();
+        
         setPreferredSize(new Dimension(700, 400));
         setLayout(null);
         fondo = new ImageIcon(getClass().getResource("/imagenes/mapa2.png")).getImage();
@@ -40,7 +44,13 @@ public class MapaNivelesBonito extends JPanel {
         cargarPosicionesNiveles();
         configurarBotones();
         agregarBotonRegresar();
+        actualizarTextos(mensajes);
+
     }
+    
+    private void actualizarTextos(Properties mensajes) {
+    botonRegresar.setText(mensajes.getProperty("regresar")); 
+}
 
     private void cargarPosicionesNiveles() {
         posicionesNiveles = new HashMap<>();

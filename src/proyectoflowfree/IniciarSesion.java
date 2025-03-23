@@ -7,6 +7,10 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.InputStream;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 /**
  *
  * @author laraj
@@ -20,9 +24,13 @@ public class IniciarSesion extends JPanel {
     private Image fondoImagen;
 
     public IniciarSesion() {
+Properties mensajes = Idioma.getMensajes();
         setLayout(null);
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/IniciarSesion.png")).getImage();
+
+        String rutaArchivo = "/proyectoflowfree/idiomas/mensajes_" + Idioma.getIdiomaActual() + ".properties";
+InputStream archivo = getClass().getResourceAsStream(rutaArchivo);
 
         // lbl Nombre de Usuario
         lblUsuario = crearEtiqueta("Nombre de Usuario:");
@@ -56,7 +64,15 @@ public class IniciarSesion extends JPanel {
         regresar.setBounds(270, 440, 250, 50);
         regresar.addActionListener(e -> regresarPantalla());
         add(regresar);
+        actualizarTextos(mensajes);
     }
+    private void actualizarTextos(Properties mensajes) {
+    lblUsuario.setText(mensajes.getProperty("nombre_usuario"));
+    lblContraseña.setText(mensajes.getProperty("contraseña"));
+    ingresar.setText(mensajes.getProperty("iniciar_sesion"));
+    regresar.setText(mensajes.getProperty("regresar"));
+}
+
 
     private JLabel crearEtiqueta(String texto) {
         JLabel etiqueta = new JLabel(texto, SwingConstants.LEFT);

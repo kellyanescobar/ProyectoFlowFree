@@ -9,6 +9,10 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.InputStream;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import javax.swing.*;
 /**
  *
@@ -20,10 +24,15 @@ public class MenuPrincipal extends JPanel {
     private Login log;
 
     public MenuPrincipal(Login log) {
+
         this.log=log;
         setLayout(null);
         
         fondoImagen=new ImageIcon(getClass().getResource("/imagenes/MenuPrincipal.png")).getImage(); 
+        
+        String rutaArchivo = "/proyectoflowfree/idiomas/mensajes_" + Idioma.getIdiomaActual() + ".properties";
+        InputStream archivo = getClass().getResourceAsStream(rutaArchivo);
+        Properties mensajes = Idioma.getMensajes();
         
         jugar = crearBoton("Jugar", new Color(0xFBD2FF), new Color(0xC700FF));
         verPerfil = crearBoton("Ver Perfil", new Color(0xFAC9DE), new Color(0xE61F93));
@@ -34,6 +43,7 @@ public class MenuPrincipal extends JPanel {
         add(verPerfil);
         add(reportes);
         add(cerrarSesion);
+        actualizarTextos(mensajes);
         
         jugar.addActionListener(e -> abrirMapa());
         verPerfil.addActionListener(e -> abrirVerPerfil());
@@ -47,6 +57,14 @@ public class MenuPrincipal extends JPanel {
             }
         });
     }
+    
+    private void actualizarTextos(Properties mensajes) {
+    jugar.setText(mensajes.getProperty("jugar"));
+    verPerfil.setText(mensajes.getProperty("ver_perfil"));
+    reportes.setText(mensajes.getProperty("reportes"));
+    cerrarSesion.setText(mensajes.getProperty("cerrar_sesion"));
+}
+
     
     private void reubicarBotones() {
         int panelWidth = getWidth();

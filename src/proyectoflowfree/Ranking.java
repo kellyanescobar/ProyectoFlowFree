@@ -5,6 +5,10 @@
 package proyectoflowfree;
 import java.awt.*;
 import java.io.File;
+import java.io.InputStream;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import javax.swing.*;
 /**
  *
@@ -21,6 +25,10 @@ public class Ranking extends JPanel {
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/RankingJugadores.png")).getImage();
 
+        String rutaArchivo = "/proyectoflowfree/idiomas/mensajes_" + Idioma.getIdiomaActual() + ".properties";
+        InputStream archivo = getClass().getResourceAsStream(rutaArchivo);
+        Properties mensajes = Idioma.getMensajes();
+        
         ImageIcon imagenIcono = cargarImagen("imagenes/Icono.jpg");
         icono = (imagenIcono != null) ? new JLabel(imagenIcono) : new JLabel("Imagen no encontrada");
         icono.setBounds(300, 20, 200, 100);
@@ -44,7 +52,13 @@ public class Ranking extends JPanel {
         regresar.addActionListener(e -> regresarMenu());
         add(regresar);
         mostrarRanking();
+        actualizarTextos(mensajes);
     }
+    
+    private void actualizarTextos(Properties mensajes) {
+    titulo.setText(mensajes.getProperty("ranking_titulo"));
+    regresar.setText(mensajes.getProperty("regresar"));
+}
 
     private JButton crearBoton(String texto, Color bgColor, Color fgColor) {
         JButton boton = new JButton(texto);

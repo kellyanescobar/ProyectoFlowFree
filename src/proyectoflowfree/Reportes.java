@@ -4,6 +4,10 @@
  */
 package proyectoflowfree;
 import java.awt.*;
+import java.io.InputStream;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import javax.swing.*;
 /**
  *
@@ -15,6 +19,11 @@ public class Reportes extends JPanel {
     private Image fondoImagen;
 
     public Reportes() {
+     String rutaArchivo = "/proyectoflowfree/idiomas/mensajes_" + Idioma.getIdiomaActual() + ".properties";
+     InputStream archivo = getClass().getResourceAsStream(rutaArchivo);
+     Properties mensajes = Idioma.getMensajes();
+
+
         setLayout(null); 
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Reportes.png")).getImage();
@@ -38,7 +47,14 @@ public class Reportes extends JPanel {
         regresar.setBounds(300, 300, 200, 50);
         regresar.addActionListener(e -> regresarMenu());
         add(regresar);
+        actualizarTextos(mensajes);
     }
+    
+    private void actualizarTextos(Properties mensajes) {
+    titulo.setText(mensajes.getProperty("reportes"));
+    verRanking.setText(mensajes.getProperty("ver_ranking"));
+    regresar.setText(mensajes.getProperty("regresar"));
+}
 
     private JButton crearBoton(String texto, Color bgColor, Color fgColor) {
         JButton boton = new JButton(texto);

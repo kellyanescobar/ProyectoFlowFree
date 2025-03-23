@@ -7,6 +7,9 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 /**
  *
  * @author laraj
@@ -20,6 +23,7 @@ public class CrearCuenta extends JPanel {
     private Image fondoImagen;
 
     public CrearCuenta() {
+        Properties mensajes = Idioma.getMensajes();
         setLayout(null);
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/CrearCuenta.png")).getImage();
@@ -66,6 +70,7 @@ public class CrearCuenta extends JPanel {
         regresar.setBounds(270, 450, 250, 50);
         regresar.addActionListener(e -> regresarPantalla());
         add(regresar);
+        actualizarTextos(mensajes);
     }
 
     private JLabel crearEtiqueta(String texto) {
@@ -74,6 +79,15 @@ public class CrearCuenta extends JPanel {
         etiqueta.setForeground(Color.WHITE); 
         return etiqueta;
     }
+    
+    private void actualizarTextos(Properties mensajes) {
+    lblNombre.setText(mensajes.getProperty("nombre_completo"));
+    lblUsuario.setText(mensajes.getProperty("nombre_usuario"));
+    lblContra.setText(mensajes.getProperty("contraseña"));
+    guardar.setText(mensajes.getProperty("crear_cuenta"));
+    regresar.setText(mensajes.getProperty("regresar"));
+}
+
 
     private JTextField crearCampoTexto() {
         JTextField campo = new JTextField();

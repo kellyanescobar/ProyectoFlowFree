@@ -4,7 +4,11 @@
  */
 package proyectoflowfree;
 import java.awt.*;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import javax.swing.*;
 /**
  *
@@ -18,6 +22,10 @@ public class VerPerfil extends JPanel {
     private Image fondoImagen;
 
     public VerPerfil() {
+     String rutaArchivo = "/proyectoflowfree/idiomas/mensajes_" + Idioma.getIdiomaActual() + ".properties";
+     Properties mensajes = Idioma.getMensajes();
+
+
         setLayout(null);
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Perfil.png")).getImage();
@@ -73,7 +81,9 @@ public class VerPerfil extends JPanel {
         regresar.setBounds(300, 360, 200, 40);
         regresar.addActionListener(e -> regresarMenu());
         add(regresar);
+        actualizarTextos(mensajes);
     }
+    
 
     private JLabel crearEtiquetaNoEditable(String texto, Color bgColor, Color fgColor) {
     JLabel etiqueta = new JLabel(texto, SwingConstants.CENTER);
@@ -85,7 +95,24 @@ public class VerPerfil extends JPanel {
     return etiqueta;
 }
 
+private void actualizarTextos(Properties mensajes) {
+    String nombreDeUsuario = (Login.usuarioLogueado != null) ? Login.usuarioLogueado.getUsuario() : mensajes.getProperty("sin_usuario");
+    usuario.setText(mensajes.getProperty("usuario") + ": " + nombreDeUsuario);
 
+    String nombreCompleto = (Login.usuarioLogueado != null) ? Login.usuarioLogueado.getNombreCompleto() : mensajes.getProperty("sin_nombre");
+    nombre.setText(mensajes.getProperty("nombre") + ": " + nombreCompleto);
+
+    String nombreAvatarSeleccionado = (Login.usuarioLogueado != null) ? Login.usuarioLogueado.getAvatarNombre() : mensajes.getProperty("sin_avatar");
+    nombreAvatar.setText(mensajes.getProperty("avatar") + ": " + nombreAvatarSeleccionado);
+
+    String fechaRegistro = (Login.usuarioLogueado != null) ? Login.usuarioLogueado.getFechaRegistro() : mensajes.getProperty("sin_fecha");
+    fecha.setText(mensajes.getProperty("fecha") + ": " + fechaRegistro);
+
+    configuracion.setText(mensajes.getProperty("configuracion"));
+    regresar.setText(mensajes.getProperty("regresar"));
+}
+
+    
     private JButton crearBotonEditable(String texto, Color bgColor, Color fgColor) {
         JButton boton = new JButton(texto);
         boton.setFont(new Font("Pixel Font", Font.BOLD, 14));

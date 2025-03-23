@@ -6,18 +6,9 @@ package proyectoflowfree;
 
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.sound.sampled.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.advanced.AdvancedPlayer;
 import musica.musica;
 
 /**
@@ -47,6 +38,7 @@ public class Configuracion extends JPanel {
     public Configuracion() {
         setLayout(null);
         cargarIdioma(idiomaActual);
+        Idioma.setIdiomaActual("en"); 
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Configuracion.png")).getImage();
 
@@ -266,7 +258,6 @@ public class Configuracion extends JPanel {
 
     private void cargarIdioma(String idioma) {
         try {
-            // 📌 Nueva ruta para archivos dentro del paquete proyectoflowfree/idiomas/
             String rutaArchivo = "/proyectoflowfree/idiomas/mensajes_" + idioma + ".properties";
             InputStream archivo = getClass().getResourceAsStream(rutaArchivo);
 
@@ -285,18 +276,19 @@ public class Configuracion extends JPanel {
     }
 
     private void cambiarIdioma() {
-        String[] opciones = {"Español", "English"};
-        int seleccion = JOptionPane.showOptionDialog(this, "Selecciona el idioma:", "Idioma",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
+    String[] opciones = {"Español", "English"};
+    int seleccion = JOptionPane.showOptionDialog(this, "Selecciona el idioma:", "Idioma",
+            JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
 
-        if (seleccion == 1) {
-            idiomaActual = "en"; // Cambiar a inglés
-        } else {
-            idiomaActual = "es"; // Cambiar a español
-        }
-        cargarIdioma(idiomaActual);
-        actualizarTextos();
+    if (seleccion == 1) {
+        Idioma.setIdiomaActual("en");  // Guarda el idioma globalmente
+    } else {
+        Idioma.setIdiomaActual("es");
     }
+    cargarIdioma(Idioma.getIdiomaActual());
+    actualizarTextos();
+}
+
 
     private void actualizarTextos() {
         idioma.setText(mensajes.getProperty("idioma"));
