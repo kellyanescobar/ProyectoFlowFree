@@ -15,7 +15,7 @@ public class MAIN {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new MenuInicio().mostrarEnFrame());
-        String musicapath = "C:/Users/50494/OneDrive/Documents/NetBeansProjects/ProyectoFlowFree/src/musica/musica de elevador.mp3";
+        String musicapath = "C:\\Users\\50494\\OneDrive\\Documents\\NetBeansProjects\\ProyectoFlowFree\\src\\musica\\backgrounbg.mp3";
         PlayMusic(musicapath);
     }
 
