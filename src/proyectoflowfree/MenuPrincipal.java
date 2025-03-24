@@ -144,12 +144,21 @@ public class MenuPrincipal extends JPanel {
         new Reportes().mostrarEnFrame();
     }
 
-    private void cerrarSesion() {
-        log.cerrarSesion();
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        frame.dispose();
-        new MenuInicio().mostrarEnFrame();
+    public void cambiarIdioma(String idioma){
+        Idioma.setIdiomaActual(idioma);
+        MenuInicio menu=new MenuInicio();
+        menu.mostrarEnFrame();
     }
+    
+    private void cerrarSesion() {
+    Login.cerrarSesion(); 
+    Idioma.setIdiomaActual("es"); 
+    Idioma.setIdiomaActual("en");
+    MenuInicio menu = new MenuInicio();
+    menu.mostrarEnFrame(); 
+}
+
+
 
     @Override
     protected void paintComponent(Graphics g) {

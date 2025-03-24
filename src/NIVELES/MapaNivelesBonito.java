@@ -30,7 +30,7 @@ public class MapaNivelesBonito extends JPanel {
     private HashMap<Integer, Point> posicionesNiveles;
     private Image fondo;
     private JButton botonRegresar;
-
+   
     public MapaNivelesBonito() {
         Properties mensajes = Idioma.getMensajes();
 
