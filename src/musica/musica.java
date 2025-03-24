@@ -26,7 +26,7 @@ public class musica {
                     player.play();
                     System.out.println("Reproduciendo de nuevo...");
                 } catch (Exception e) {
-                    System.out.println("Error al reproducir la música: " + e.getMessage());
+                    System.out.println("Error al reproducir la musica: " + e.getMessage());
                 }
             }
         }).start();

@@ -3,17 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package proyectoflowfree;
+
 import java.io.InputStream;
 import java.util.Properties;
 import javax.swing.ImageIcon;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Properties;
+
 /**
  *
  * @author laraj
  */
 public class Estadisticas extends JPanel {
+
     private JLabel icono, titulo, partidas, puntos, completados, tiempo;
     private JButton regresar;
     private Image fondoImagen;
@@ -30,9 +33,9 @@ public class Estadisticas extends JPanel {
         add(icono);
 
         titulo = new JLabel(mensajes.getProperty("estadistica_titulo", "ESTADÍSTICAS"), SwingConstants.CENTER);
-        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); 
-        titulo.setForeground(new Color(255, 105, 180)); 
-        titulo.setBounds(200, 90, 400, 50); 
+        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40));
+        titulo.setForeground(new Color(255, 105, 180));
+        titulo.setBounds(200, 90, 400, 50);
         add(titulo);
 
         Login usuario = Login.usuarioLogueado;
@@ -40,15 +43,14 @@ public class Estadisticas extends JPanel {
         int partidasJugadas = (usuario != null) ? usuario.getPartidasJugadas() : 0;
         int puntosTotales = (usuario != null) ? usuario.getPuntos() : 0;
         int nivelAlcanzado = (usuario != null) ? usuario.getNivelAlcanzado() : 0;
-        int tiempoJugado = (usuario != null) ? usuario.getTiempoJugado() : 0;
+        int tiempoJugadoSegundos = (usuario != null) ? usuario.getTiempoJugado() : 0;
+        String tiempoFormateado = String.format("%02d:%02d", tiempoJugadoSegundos / 60, tiempoJugadoSegundos % 60);
 
-        partidas = crearLabel(mensajes.getProperty("partidas_jugadas", "Partidas Jugadas") + ": " + partidasJugadas, 200);
-        puntos = crearLabel(mensajes.getProperty("puntos_totales", "Puntos Totales") + ": " + puntosTotales, 250);
-        completados = crearLabel(mensajes.getProperty("juegos_completados", "Juegos Completados") + ": " + (nivelAlcanzado - 1), 300);
-        tiempo = crearLabel(mensajes.getProperty("tiempo_jugado", "Tiempo Jugado (min)") + ": " + tiempoJugado, 350);
+        
+        completados = crearLabel(mensajes.getProperty("juegos_completados", "Juegos Completados") + ": " + (nivelAlcanzado - 1), 200);
+        tiempo = crearLabel(mensajes.getProperty("tiempo_jugado", "Tiempo Jugado") + ": " + tiempoFormateado, 300);
 
-        add(partidas);
-        add(puntos);
+     
         add(completados);
         add(tiempo);
 
@@ -105,4 +107,3 @@ public class Estadisticas extends JPanel {
         SwingUtilities.invokeLater(() -> new Estadisticas().mostrarEnFrame());
     }
 }
-

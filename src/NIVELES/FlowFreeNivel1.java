@@ -10,6 +10,7 @@ import java.awt.Point;
 import java.awt.*;
 
 public class FlowFreeNivel1 extends FlowFreeBase {
+    private long tiempoInicio;
 
     public FlowFreeNivel1(MapaNivelesBonito mapa) {
         super(mapa, 3, 100, new Color[]{Color.GREEN, Color.BLUE, Color.RED});

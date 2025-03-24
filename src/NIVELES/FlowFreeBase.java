@@ -32,6 +32,7 @@ public abstract class FlowFreeBase extends JPanel {
     protected Graphics2D bufferGraphics;
     protected boolean mostrarError = false;
     protected MapaNivelesBonito mapa;
+    protected long tiempoInicio;
 
     public FlowFreeBase(MapaNivelesBonito mapa, int gridSize, int cellSize, Color[] colors) {
         this.mapa = mapa;
@@ -54,6 +55,9 @@ public abstract class FlowFreeBase extends JPanel {
 
         add(panelGrid, BorderLayout.CENTER);
         add(panelBotones, BorderLayout.SOUTH);
+
+        this.tiempoInicio = System.currentTimeMillis();
+
     }
 
     private JButton crearBoton(String nombreImagen, ActionListener listener) {
@@ -98,13 +102,21 @@ public abstract class FlowFreeBase extends JPanel {
                     if (nivelCompletado()) {
                         JOptionPane.showMessageDialog(null, "¡Nivel " + numeroNivel() + " completado!");
                         mapa.desbloquearNivel(numeroNivel());
+                        // ⏱️ Calcular duración del nivel
+                        long tiempoFinal = System.currentTimeMillis();
+                        long duracionSegundos = (tiempoFinal - tiempoInicio) / 1000;
 
                         if (Login.usuarioLogueado != null) {
-                          
+                            int tiempoPrevio = Login.usuarioLogueado.getTiempoJugado();
+                            Login.usuarioLogueado.setTiempoJugado(tiempoPrevio + (int) duracionSegundos);
+                            Login.usuarioLogueado.guardarDatos();
+                        }
+
+                        if (Login.usuarioLogueado != null) {
+
                             new Thread(() -> Login.usuarioLogueado.guardarDatos()).start(); //hilos
                         }
 
-                      
                         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(FlowFreeBase.this);
                         CargaEntreNiveles carga = new CargaEntreNiveles(frame);
                         carga.mostrarPor(2000, FlowFreeBase.this::volverAlMapa);

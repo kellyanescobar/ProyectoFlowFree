@@ -3,17 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyectoflowfree;
+
 import java.io.*;
 import javax.swing.JOptionPane;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  *
  * @author laraj
  */
 public class Login implements Serializable {
+
     private String usuario;
     private String password;
     private String nombreCompleto;
@@ -24,15 +27,14 @@ public class Login implements Serializable {
     private String historialPartidas;
     private String avatar;
     private Map<String, String> preferencias;
-    private int nivelAlcanzado=1;
+    private int nivelAlcanzado = 1;
 
-    
     private static final String USER_DIR = "usuarios/";
     public static Login usuarioLogueado;
-    
-    private String avatarRuta = "/imagenes/ElegirAvatar.png"; 
-    private String nombreAvatar = "Desconocido"; 
-    
+
+    private String avatarRuta = "/imagenes/ElegirAvatar.png";
+    private String nombreAvatar = "Desconocido";
+
     public Login(String usuario, String password, String nombreCompleto) {
         this.usuario = usuario;
         this.password = password;
@@ -46,7 +48,7 @@ public class Login implements Serializable {
         this.preferencias = new HashMap<>();
         this.preferencias.put("idioma", "español");
         this.preferencias.put("volumen", "100");
-        
+
         File userFolder = new File(USER_DIR + usuario);
         if (!userFolder.exists()) {
             userFolder.mkdirs();
@@ -82,7 +84,7 @@ public class Login implements Serializable {
         JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.");
         return false;
     }
-    
+
     public static boolean registrarUsuario(String usuario, String password, String nombreCompleto) {
         if (new File(USER_DIR + usuario).exists()) {
             JOptionPane.showMessageDialog(null, "El usuario ya existe.");
@@ -92,58 +94,58 @@ public class Login implements Serializable {
         JOptionPane.showMessageDialog(null, "Usuario registrado exitosamente.");
         return true;
     }
-    
+
     public static void cerrarSesion() {
         if (usuarioLogueado != null) {
             usuarioLogueado.guardarDatos();
             usuarioLogueado = null;
         }
     }
-    
-   public void cambiarNombre(String nuevoNombre) {
-    if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
-        this.nombreCompleto = nuevoNombre;
-        guardarDatos(); 
-    }
-}
 
-   public boolean cambiarUsuario(String nuevoUsuario) {
-    if (nuevoUsuario != null && !nuevoUsuario.trim().isEmpty()) {
-        File oldFolder = new File(USER_DIR + this.usuario);
-        File newFolder = new File(USER_DIR + nuevoUsuario);
-
-        if (newFolder.exists()) {
-            JOptionPane.showMessageDialog(null, "El nombre de usuario ya está en uso.");
-            return false;
+    public void cambiarNombre(String nuevoNombre) {
+        if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
+            this.nombreCompleto = nuevoNombre;
+            guardarDatos();
         }
+    }
 
-        if (oldFolder.renameTo(newFolder)) {
-            this.usuario = nuevoUsuario;
+    public boolean cambiarUsuario(String nuevoUsuario) {
+        if (nuevoUsuario != null && !nuevoUsuario.trim().isEmpty()) {
+            File oldFolder = new File(USER_DIR + this.usuario);
+            File newFolder = new File(USER_DIR + nuevoUsuario);
+
+            if (newFolder.exists()) {
+                JOptionPane.showMessageDialog(null, "El nombre de usuario ya está en uso.");
+                return false;
+            }
+
+            if (oldFolder.renameTo(newFolder)) {
+                this.usuario = nuevoUsuario;
+                guardarDatos();
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo cambiar el usuario.");
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public boolean cambiarContraseña(String nuevaContraseña) {
+        if (nuevaContraseña.length() >= 5) {
+            this.password = nuevaContraseña;
             guardarDatos();
             return true;
         } else {
-            JOptionPane.showMessageDialog(null, "No se pudo cambiar el usuario.");
+            JOptionPane.showMessageDialog(null, "La contraseña debe tener al menos 5 caracteres.");
             return false;
         }
     }
-    return false;
-}
 
-    
-    public boolean cambiarContraseña(String nuevaContraseña) {
-    if (nuevaContraseña.length() >= 5) {
-        this.password = nuevaContraseña;
-        guardarDatos();
-        return true;
-    } else {
-        JOptionPane.showMessageDialog(null, "La contraseña debe tener al menos 5 caracteres.");
-        return false;
-    }
-}
-
-    
     public boolean eliminarCuenta() {
-        if (usuarioLogueado == null) return false;
+        if (usuarioLogueado == null) {
+            return false;
+        }
         File userFolder = new File(USER_DIR + usuario);
         for (File file : userFolder.listFiles()) {
             file.delete();
@@ -153,85 +155,87 @@ public class Login implements Serializable {
         JOptionPane.showMessageDialog(null, "Cuenta eliminada exitosamente.");
         return true;
     }
-    
+
     public void sumarPuntos(int puntosGanados) {
         this.puntos += puntosGanados;
         guardarDatos();
     }
-    
+
     public void registrarPartida(String resultado) {
         this.historialPartidas += new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()) + " - " + resultado + "\n";
         guardarDatos();
     }
-    
+
     public void cambiarAvatar(String nuevoAvatar) {
         this.avatar = nuevoAvatar;
         guardarDatos();
     }
-    
+
     public void actualizarPreferencias(String clave, String valor) {
         this.preferencias.put(clave, valor);
         guardarDatos();
     }
-    
+
     public String obtenerHistorial() {
         return historialPartidas.isEmpty() ? "No hay partidas registradas." : historialPartidas;
     }
-    
+
     public String getUsuario() {
-    return usuario;
-}
+        return usuario;
+    }
 
     public String getNombreCompleto() {
-    return nombreCompleto;
-}
+        return nombreCompleto;
+    }
 
     public String getFechaRegistro() {
-    return fechaRegistro;
-}
- 
-    
- public void setAvatar(String avatarPath, String avatarName) {
-    this.avatar = avatarPath;
-    this.nombreAvatar = avatarName;  
-    guardarDatos();
-}
-
-
-public String getAvatar() {
-    return this.avatar;
-}   
-
-public String getAvatarNombre() {
-    return nombreAvatar;
-}
-
-public void setNivelAlcanzado(int nivel) {
-    this.nivelAlcanzado = nivel;
-    guardarDatos(); 
-}
-
-public int getNivelAlcanzado() {
-    return nivelAlcanzado;
-}
-
-public int getPuntos() {
-    return puntos;
-}
-
-public int getTiempoJugado() {
-    return tiempoJugado;
-}
-
-public void sumarTiempoJugado(int minutos) {
-    this.tiempoJugado += minutos;
-    guardarDatos();
-}
-
-public int getPartidasJugadas() {
-    if (historialPartidas == null || historialPartidas.isEmpty()) {
-        return 0;
+        return fechaRegistro;
     }
-    return historialPartidas.split("\n").length;
-}
+
+    public void setAvatar(String avatarPath, String avatarName) {
+        this.avatar = avatarPath;
+        this.nombreAvatar = avatarName;
+        guardarDatos();
+    }
+
+    public String getAvatar() {
+        return this.avatar;
+    }
+
+    public String getAvatarNombre() {
+        return nombreAvatar;
+    }
+
+    public void setNivelAlcanzado(int nivel) {
+        this.nivelAlcanzado = nivel;
+        guardarDatos();
+    }
+
+    public int getNivelAlcanzado() {
+        return nivelAlcanzado;
+    }
+
+    public int getPuntos() {
+        return puntos;
+    }
+
+    public int getTiempoJugado() {
+        return tiempoJugado;
+    }
+
+    public void setTiempoJugado(int tiempoJugado) {
+        this.tiempoJugado = tiempoJugado;
+    }
+
+    public void sumarTiempoJugadoSegundos(int segundos) {
+        this.tiempoJugado += segundos;
+        guardarDatos();
+    }
+
+    public int getPartidasJugadas() {
+        if (historialPartidas == null || historialPartidas.isEmpty()) {
+            return 0;
+        }
+        return historialPartidas.split("\n").length;
+    }
 }
