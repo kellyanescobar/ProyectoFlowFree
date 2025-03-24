@@ -19,8 +19,5 @@ public class MAIN {
         String musicapath = "C:\\Users\\50494\\OneDrive\\Documents\\NetBeansProjects\\ProyectoFlowFree\\src\\musica\\backgrounbg.mp3";
         PlayMusic(musicapath);
     }
-
 }
-//estadistica y lo del timpo para ganar
-//volumen
 

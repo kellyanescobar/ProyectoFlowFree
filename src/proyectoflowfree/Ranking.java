@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyectoflowfree;
+
 import java.awt.*;
 import java.io.File;
 import java.io.InputStream;
@@ -10,18 +11,20 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javax.swing.*;
+
 /**
  *
  * @author laraj
  */
 public class Ranking extends JPanel {
+
     private JTextArea rankingArea;
     private JButton regresar;
     private JLabel icono, titulo;
     private Image fondoImagen;
 
     public Ranking() {
-        setLayout(null); 
+        setLayout(null);
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/RankingJugadores.png")).getImage();
 
@@ -36,8 +39,8 @@ public class Ranking extends JPanel {
 
         // Título dinámico ROSADO
         titulo = new JLabel(mensajes.getProperty("ranking_titulo", "RANKING"), SwingConstants.CENTER);
-        titulo.setFont(new Font("Pixel Font", Font.BOLD, 30)); 
-        titulo.setForeground(new Color(255, 105, 180)); 
+        titulo.setFont(new Font("Pixel Font", Font.BOLD, 30));
+        titulo.setForeground(new Color(255, 105, 180));
         titulo.setBounds(200, 90, 400, 50);
         add(titulo);
 
@@ -64,20 +67,42 @@ public class Ranking extends JPanel {
 
         if (usuariosDir.exists() && usuariosDir.isDirectory()) {
             File[] usuarios = usuariosDir.listFiles();
+            java.util.List<Login> listaUsuarios = new java.util.ArrayList<>();
 
+            // Cargar usuarios 
             for (File userDir : usuarios) {
                 if (userDir.isDirectory()) {
                     Login user = Login.cargarDatos(userDir.getName());
                     if (user != null) {
-                        rankingTexto.append("Jugador: ")
-                                    .append(user.getUsuario())
-                                    .append(" | Nivel Alcanzado: ")
-                                    .append(user.getNivelAlcanzado())
-                                    .append("/5\n");
+                        listaUsuarios.add(user);
                     }
                 }
             }
+
+            // Ordenar: nivel descendente, tiempo ascendente
+            listaUsuarios.sort((u1, u2) -> {
+                if (u1.getNivelAlcanzado() != u2.getNivelAlcanzado()) {
+                    return Integer.compare(u2.getNivelAlcanzado(), u1.getNivelAlcanzado()); // más alto primero
+                } else {
+                    return Integer.compare(u1.getTiempoJugado(), u2.getTiempoJugado()); // menor tiempo primero
+                }
+            });
+
+            // Mostrar en texto
+            for (Login user : listaUsuarios) {
+                String tiempoFormateado = String.format("%02d:%02d", user.getTiempoJugado() / 60, user.getTiempoJugado() % 60);
+
+                rankingTexto.append("Jugador: ")
+                        .append(user.getUsuario())
+                        .append(" | Nivel: ")
+                        .append(user.getNivelAlcanzado())
+                        .append("/5")
+                        .append(" | Tiempo: ")
+                        .append(tiempoFormateado)
+                        .append("\n");
+            }
         }
+
         rankingArea.setText(rankingTexto.toString());
     }
 
@@ -131,9 +156,5 @@ public class Ranking extends JPanel {
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Ranking().mostrarEnFrame());
     }
 }

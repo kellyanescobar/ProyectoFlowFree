@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyectoflowfree;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.*;
@@ -14,6 +15,7 @@ import javax.swing.*;
 import java.util.Properties;
 
 public class MenuInicio extends JPanel {
+
     private static JFrame frame;
     private JButton iniciarSesion, crearUsuario, salir;
     private Image fondoImagen;
@@ -24,7 +26,7 @@ public class MenuInicio extends JPanel {
 
         Properties mensajes = Idioma.getMensajes();
         JLabel titulo = new JLabel(mensajes.getProperty("menu_inicio_titulo", "MENÚ"), SwingConstants.CENTER);
-        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); 
+        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40));
         titulo.setForeground(new Color(255, 105, 180)); // Rosado
         titulo.setBounds(200, 90, 400, 50);
         add(titulo);
@@ -46,11 +48,12 @@ public class MenuInicio extends JPanel {
         actualizarTextos(mensajes);
 
     }
-  private void actualizarTextos(Properties mensajes) {
-    iniciarSesion.setText(mensajes.getProperty("iniciar_sesion"));
-    crearUsuario.setText(mensajes.getProperty("crear_usuario"));
-    salir.setText(mensajes.getProperty("salir"));
-}
+
+    private void actualizarTextos(Properties mensajes) {
+        iniciarSesion.setText(mensajes.getProperty("iniciar_sesion"));
+        crearUsuario.setText(mensajes.getProperty("crear_usuario"));
+        salir.setText(mensajes.getProperty("salir"));
+    }
 
     private JButton crearBoton(String texto, Color bgColor, Color fgColor) {
         JButton boton = new JButton(texto);
@@ -120,9 +123,5 @@ public class MenuInicio extends JPanel {
             frame.setVisible(true);
             frame.toFront();
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MenuInicio().mostrarEnFrame());
     }
 }

@@ -333,8 +333,4 @@ public class Configuracion extends JPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Configuracion().mostrarEnFrame());
-    }
 }

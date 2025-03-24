@@ -267,19 +267,16 @@ public class MapaNivelesBonito extends JPanel {
             actualizarNivelesDesbloqueados();
             configurarBotones();
         } else if (nivelCompletado == totalNiveles) {
-            javax.swing.Timer timer = new javax.swing.Timer(2000, e -> {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "¡Felicidades! Has completado todos los niveles del juego",
-                        "Juego completado",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
-            });
-            timer.setRepeats(false);
-            timer.start();
+
+            if (Login.usuarioLogueado != null) {
+                Login.usuarioLogueado.guardarDatos();
+            }
+
+            actualizarNivelesDesbloqueados();
+            configurarBotones();
         }
     }
-    
+
     private void regresarMenu() {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         frame.dispose();

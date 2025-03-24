@@ -24,7 +24,7 @@ public class Reportes extends JPanel {
         setLayout(null);
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Reportes.png")).getImage();
 
-        // Cargar y colocar el icono
+       
         ImageIcon imagenIcono = cargarImagen("imagenes/Icono.jpeg");
         icono = (imagenIcono != null) ? new JLabel(imagenIcono) : new JLabel("Imagen no encontrada");
         icono.setBounds(250, 30, 300, 50);  // Corrige posición
@@ -123,9 +123,5 @@ public class Reportes extends JPanel {
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Reportes().mostrarEnFrame());
     }
 }

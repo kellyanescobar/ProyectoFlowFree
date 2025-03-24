@@ -102,8 +102,4 @@ public class Estadisticas extends JPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Estadisticas().mostrarEnFrame());
-    }
 }

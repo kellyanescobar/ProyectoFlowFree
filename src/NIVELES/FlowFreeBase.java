@@ -102,7 +102,7 @@ public abstract class FlowFreeBase extends JPanel {
                     if (nivelCompletado()) {
                         JOptionPane.showMessageDialog(null, "¡Nivel " + numeroNivel() + " completado!");
                         mapa.desbloquearNivel(numeroNivel());
-                        // ⏱️ Calcular duración del nivel
+                        //duracion nivel
                         long tiempoFinal = System.currentTimeMillis();
                         long duracionSegundos = (tiempoFinal - tiempoInicio) / 1000;
 
