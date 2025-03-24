@@ -30,6 +30,12 @@ public class VerPerfil extends JPanel {
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Perfil.png")).getImage();
 
+        JLabel titulo = new JLabel(mensajes.getProperty("titulo_ver_perfil", "PERFIL"), SwingConstants.CENTER);
+        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); 
+        titulo.setForeground(new Color(255, 105, 180)); 
+        titulo.setBounds(250, 30, 300, 50); 
+        add(titulo);
+
         String avatarPath = (Login.usuarioLogueado != null) ? Login.usuarioLogueado.getAvatar() : null;
         URL avatarUrl = (avatarPath != null && !avatarPath.equals("default.png")) ? getClass().getResource(avatarPath) : null;
         

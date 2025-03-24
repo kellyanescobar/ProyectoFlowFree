@@ -14,53 +14,47 @@ import javax.swing.*;
  * @author laraj
  */
 public class Reportes extends JPanel {
-    private JButton verRanking,estadisticas, regresar;
+    private JButton verRanking, estadisticas, regresar;
     private JLabel icono, titulo;
     private Image fondoImagen;
 
     public Reportes() {
-     String rutaArchivo = "/proyectoflowfree/idiomas/mensajes_" + Idioma.getIdiomaActual() + ".properties";
-     InputStream archivo = getClass().getResourceAsStream(rutaArchivo);
-     Properties mensajes = Idioma.getMensajes();
+        Properties mensajes = Idioma.getMensajes(); // Carga el idioma actual
 
-
-        setLayout(null); 
-
+        setLayout(null);
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Reportes.png")).getImage();
+
+        // Cargar y colocar el icono
         ImageIcon imagenIcono = cargarImagen("imagenes/Icono.jpeg");
         icono = (imagenIcono != null) ? new JLabel(imagenIcono) : new JLabel("Imagen no encontrada");
-        icono.setBounds(300, 20, 200, 100);
+        icono.setBounds(250, 30, 300, 50);  // Corrige posición
         add(icono);
 
-        titulo = new JLabel("Reportes", SwingConstants.CENTER);
-        titulo.setFont(new Font("Pixel Font", Font.BOLD, 24));
-        titulo.setForeground(Color.BLACK);
-        titulo.setBounds(280, 130, 250, 50);
+        // Título dinámico ROSADO
+        titulo = new JLabel(mensajes.getProperty("titulo_reportes", "REPORTES"), SwingConstants.CENTER);
+        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); // Tamaño 40 y Negrita
+        titulo.setForeground(new Color(255, 105, 180)); // Color Rosado
+        titulo.setBounds(250, 100, 300, 50); 
         add(titulo);
 
-        verRanking = crearBoton("VER RANKING", new Color(251, 210, 255), new Color(199, 0, 255));
+        // Botón Ranking
+        verRanking = crearBoton(mensajes.getProperty("ver_ranking", "VER RANKING"), new Color(251, 210, 255), new Color(199, 0, 255));
         verRanking.setBounds(300, 220, 200, 50);
         verRanking.addActionListener(e -> abrirRanking());
         add(verRanking);
-        
-        estadisticas = crearBoton("Estadisticas", new Color(251, 210, 255), new Color(199, 0, 255));
+
+        // Botón Estadísticas
+        estadisticas = crearBoton(mensajes.getProperty("estadisticas", "Estadísticas"), new Color(251, 210, 255), new Color(199, 0, 255));
         estadisticas.setBounds(300, 300, 200, 50);
         estadisticas.addActionListener(e -> abrirEstadisticas());
         add(estadisticas);
 
-        regresar = crearBoton("REGRESAR", new Color(246, 176, 164), new Color(234, 89, 35));
+        // Botón Regresar
+        regresar = crearBoton(mensajes.getProperty("regresar", "REGRESAR"), new Color(246, 176, 164), new Color(234, 89, 35));
         regresar.setBounds(300, 380, 200, 50);
         regresar.addActionListener(e -> regresarMenu());
         add(regresar);
-        actualizarTextos(mensajes);
     }
-    
-    private void actualizarTextos(Properties mensajes) {
-    titulo.setText(mensajes.getProperty("reportes"));
-    verRanking.setText(mensajes.getProperty("ver_ranking"));
-    estadisticas.setText(mensajes.getProperty("estadisticas"));
-    regresar.setText(mensajes.getProperty("regresar"));
-}
 
     private JButton crearBoton(String texto, Color bgColor, Color fgColor) {
         JButton boton = new JButton(texto);
@@ -94,7 +88,7 @@ public class Reportes extends JPanel {
         frame.dispose();
         new Ranking().mostrarEnFrame();
     }
-    
+
     private void abrirEstadisticas() {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         frame.dispose();
