@@ -14,7 +14,7 @@ import javax.swing.*;
  * @author laraj
  */
 public class Reportes extends JPanel {
-    private JButton verRanking, regresar;
+    private JButton verRanking,estadisticas, regresar;
     private JLabel icono, titulo;
     private Image fondoImagen;
 
@@ -42,9 +42,14 @@ public class Reportes extends JPanel {
         verRanking.setBounds(300, 220, 200, 50);
         verRanking.addActionListener(e -> abrirRanking());
         add(verRanking);
+        
+        estadisticas = crearBoton("Estadisticas", new Color(251, 210, 255), new Color(199, 0, 255));
+        estadisticas.setBounds(300, 300, 200, 50);
+        estadisticas.addActionListener(e -> abrirEstadisticas());
+        add(estadisticas);
 
         regresar = crearBoton("REGRESAR", new Color(246, 176, 164), new Color(234, 89, 35));
-        regresar.setBounds(300, 300, 200, 50);
+        regresar.setBounds(300, 380, 200, 50);
         regresar.addActionListener(e -> regresarMenu());
         add(regresar);
         actualizarTextos(mensajes);
@@ -53,6 +58,7 @@ public class Reportes extends JPanel {
     private void actualizarTextos(Properties mensajes) {
     titulo.setText(mensajes.getProperty("reportes"));
     verRanking.setText(mensajes.getProperty("ver_ranking"));
+    estadisticas.setText(mensajes.getProperty("estadisticas"));
     regresar.setText(mensajes.getProperty("regresar"));
 }
 
@@ -87,6 +93,12 @@ public class Reportes extends JPanel {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         frame.dispose();
         new Ranking().mostrarEnFrame();
+    }
+    
+    private void abrirEstadisticas() {
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        frame.dispose();
+        new Estadisticas().mostrarEnFrame();
     }
 
     private void regresarMenu() {

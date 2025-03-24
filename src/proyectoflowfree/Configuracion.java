@@ -236,7 +236,6 @@ public class Configuracion extends JPanel {
     }
 }
 
-
     private void eliminarCuenta() {
         int confirmacion = JOptionPane.showConfirmDialog(this, "¿Esta seguro de eliminar su cuenta?", "Confirmacion",
                 JOptionPane.YES_NO_OPTION);

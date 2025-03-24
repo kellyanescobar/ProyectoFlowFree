@@ -215,4 +215,23 @@ public int getNivelAlcanzado() {
     return nivelAlcanzado;
 }
 
+public int getPuntos() {
+    return puntos;
+}
+
+public int getTiempoJugado() {
+    return tiempoJugado;
+}
+
+public void sumarTiempoJugado(int minutos) {
+    this.tiempoJugado += minutos;
+    guardarDatos();
+}
+
+public int getPartidasJugadas() {
+    if (historialPartidas == null || historialPartidas.isEmpty()) {
+        return 0;
+    }
+    return historialPartidas.split("\n").length;
+}
 }
