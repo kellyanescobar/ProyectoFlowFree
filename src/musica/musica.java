@@ -18,7 +18,7 @@ public class musica {
 
     public static void PlayMusic(String location) {
         new Thread(() -> {
-            while (true) {  //loop
+            while (true) {  //loop hilo
                 try {
                     FileInputStream fileInputStream = new FileInputStream(location);
                     player = new Player(fileInputStream);

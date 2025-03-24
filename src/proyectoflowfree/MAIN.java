@@ -21,7 +21,6 @@ public class MAIN {
     }
 
 }
-//modificar restriccion de mapa con 
 //estadistica y lo del timpo para ganar
 //volumen
 

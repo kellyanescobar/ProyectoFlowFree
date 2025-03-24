@@ -266,7 +266,7 @@ public abstract class FlowFreeBase extends JPanel {
         return (dx == 1 && dy == 0) || (dx == 0 && dy == 1);
     }
 
-    // Métodos abstractos
+    // metodos abstractos
     protected abstract void cargarPuntosDeLaImagen();
 
     protected abstract boolean nivelCompletado();
