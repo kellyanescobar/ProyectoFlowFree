@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/laraj/Documents/NetBeansProjects/ProyectoFlowFree/src/proyectoflowfree/MenuInicio.java</file>
-            <file>file:/C:/Users/laraj/Documents/NetBeansProjects/ProyectoFlowFree/src/proyectoflowfree/Reportes.java</file>
+            <file>file:/C:/Users/laraj/Documents/NetBeansProjects/ProyectoFlowFree/src/proyectoflowfree/idiomas/mensajes_es.properties</file>
+            <file>file:/C:/Users/laraj/Documents/NetBeansProjects/ProyectoFlowFree/src/proyectoflowfree/idiomas/mensajes_en.properties</file>
             <file>file:/C:/Users/laraj/Documents/NetBeansProjects/ProyectoFlowFree/src/proyectoflowfree/Login.java</file>
             <file>file:/C:/Users/laraj/Documents/NetBeansProjects/ProyectoFlowFree/src/proyectoflowfree/Configuracion.java</file>
-            <file>file:/C:/Users/laraj/Documents/NetBeansProjects/ProyectoFlowFree/src/proyectoflowfree/Idioma.java</file>
         </group>
     </open-files>
 </project-private>
