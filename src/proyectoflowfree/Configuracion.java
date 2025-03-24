@@ -241,15 +241,21 @@ public class Configuracion extends JPanel {
 }
 
     private void eliminarCuenta() {
-        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Esta seguro de eliminar su cuenta?", "Confirmacion",
-                JOptionPane.YES_NO_OPTION);
-        if (confirmacion == JOptionPane.YES_OPTION) {
+    int confirmacion = JOptionPane.showConfirmDialog(this, 
+        "¿Esta seguro de eliminar su cuenta?", "Confirmacion", 
+        JOptionPane.YES_NO_OPTION);
+
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        if (Login.usuarioLogueado != null && Login.usuarioLogueado.eliminarCuenta()) {
             JOptionPane.showMessageDialog(this, "Cuenta eliminada exitosamente.");
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            frame.dispose();
-            new MenuInicio().mostrarEnFrame();
+            frame.dispose();  // Cierra la configuracion
+            new MenuInicio().mostrarEnFrame();  // Vuelve al menu
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al eliminar la cuenta.");
         }
     }
+}
 
     private void cambiarAvatar() {
         JOptionPane.showMessageDialog(this, "Funcion de cambio de avatar en desarrollo, todavia me falta");
