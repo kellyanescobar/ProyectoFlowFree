@@ -38,7 +38,7 @@ public class MenuPrincipal extends JPanel {
         JLabel titulo = new JLabel(mensajes.getProperty("menu_principal_titulo", "MENÚ"), SwingConstants.CENTER);
         titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); 
         titulo.setForeground(new Color(255, 105, 180));        
-        titulo.setBounds(200, 50, 400, 50);                     
+        titulo.setBounds(200, 90, 400, 50);                     
         add(titulo);
         
         jugar = crearBoton("Jugar", new Color(0xFBD2FF), new Color(0xC700FF));

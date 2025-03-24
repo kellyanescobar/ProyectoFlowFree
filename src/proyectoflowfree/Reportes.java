@@ -19,7 +19,7 @@ public class Reportes extends JPanel {
     private Image fondoImagen;
 
     public Reportes() {
-        Properties mensajes = Idioma.getMensajes(); // Carga el idioma actual
+        Properties mensajes = Idioma.getMensajes(); 
 
         setLayout(null);
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Reportes.png")).getImage();
@@ -32,9 +32,9 @@ public class Reportes extends JPanel {
 
         // Título dinámico ROSADO
         titulo = new JLabel(mensajes.getProperty("titulo_reportes", "REPORTES"), SwingConstants.CENTER);
-        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); // Tamaño 40 y Negrita
-        titulo.setForeground(new Color(255, 105, 180)); // Color Rosado
-        titulo.setBounds(250, 100, 300, 50); 
+        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); 
+        titulo.setForeground(new Color(255, 105, 180)); 
+        titulo.setBounds(200, 90, 400, 50); 
         add(titulo);
 
         // Botón Ranking

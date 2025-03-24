@@ -36,9 +36,9 @@ public class Ranking extends JPanel {
 
         // Título dinámico ROSADO
         titulo = new JLabel(mensajes.getProperty("ranking_titulo", "RANKING"), SwingConstants.CENTER);
-        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); // Tamaño 40 y Negrita
-        titulo.setForeground(new Color(255, 105, 180)); // Color Rosado
-        titulo.setBounds(200, 130, 400, 50);
+        titulo.setFont(new Font("Pixel Font", Font.BOLD, 30)); 
+        titulo.setForeground(new Color(255, 105, 180)); 
+        titulo.setBounds(200, 90, 400, 50);
         add(titulo);
 
         // Área de ranking

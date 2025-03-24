@@ -44,7 +44,7 @@ public class Configuracion extends JPanel {
         JLabel titulo = new JLabel(mensajes.getProperty("configuracion_titulo", "CONFIGURACIÓN"), SwingConstants.CENTER);
         titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); 
         titulo.setForeground(new Color(255, 105, 180));
-        titulo.setBounds(200, 50, 400, 50);
+        titulo.setBounds(200, 90, 400, 50);
         add(titulo);
         // Boton Idioma
         idioma = crearBoton("IDIOMA", new Color(255, 245, 202), new Color(255, 205, 0));
