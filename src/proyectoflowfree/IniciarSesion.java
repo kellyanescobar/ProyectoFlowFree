@@ -24,13 +24,17 @@ public class IniciarSesion extends JPanel {
     private Image fondoImagen;
 
     public IniciarSesion() {
-Properties mensajes = Idioma.getMensajes();
+        Properties mensajes = Idioma.getMensajes();
         setLayout(null);
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/IniciarSesion.png")).getImage();
-
+        JLabel titulo = new JLabel(mensajes.getProperty("iniciar_sesion", "INICIAR SESIÓN"), SwingConstants.CENTER);
+        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40));  // Tamaño 40 y negrita
+        titulo.setForeground(new Color(255, 105, 180));        // Rosado
+        titulo.setBounds(200, 50, 400, 50);                    // Ajusta la posición según tu diseño
+        add(titulo);
         String rutaArchivo = "/proyectoflowfree/idiomas/mensajes_" + Idioma.getIdiomaActual() + ".properties";
-InputStream archivo = getClass().getResourceAsStream(rutaArchivo);
+        InputStream archivo = getClass().getResourceAsStream(rutaArchivo);
 
         // lbl Nombre de Usuario
         lblUsuario = crearEtiqueta("Nombre de Usuario:");

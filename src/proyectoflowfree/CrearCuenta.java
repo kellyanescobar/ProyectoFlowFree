@@ -27,7 +27,11 @@ public class CrearCuenta extends JPanel {
         setLayout(null);
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/CrearCuenta.png")).getImage();
-        
+        JLabel titulo = new JLabel(mensajes.getProperty("crear_cuenta_titulo"), SwingConstants.CENTER);
+        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); // Tamaño 40 y Negrita
+        titulo.setForeground(new Color(255, 105, 180)); // Color Rosado
+        titulo.setBounds(200, 30, 400, 50); // Ajusta posición si es necesario
+        add(titulo);
         //lbl del Nombre completo
         lblNombre = crearEtiqueta("Nombre Completo:");
         lblNombre.setBounds(270, 170, 250, 30);

@@ -23,6 +23,11 @@ public class MenuInicio extends JPanel {
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/MenuInicio.png")).getImage();
 
         Properties mensajes = Idioma.getMensajes();
+        JLabel titulo = new JLabel(mensajes.getProperty("menu_inicio_titulo", "MENÚ"), SwingConstants.CENTER);
+        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); // Tamaño 40 y negrita
+        titulo.setForeground(new Color(255, 105, 180)); // Rosado
+        titulo.setBounds(200, 100, 400, 50);
+        add(titulo);
 
         iniciarSesion = crearBoton(mensajes.getProperty("iniciar_sesion"), new Color(0xA2F255), new Color(0x026610));
         iniciarSesion.setBounds(310, 230, 180, 50);

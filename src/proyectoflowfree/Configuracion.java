@@ -41,7 +41,11 @@ public class Configuracion extends JPanel {
         Idioma.setIdiomaActual("en");
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Configuracion.png")).getImage();
-
+        JLabel titulo = new JLabel(mensajes.getProperty("configuracion_titulo", "CONFIGURACIÓN"), SwingConstants.CENTER);
+        titulo.setFont(new Font("Pixel Font", Font.BOLD, 40)); 
+        titulo.setForeground(new Color(255, 105, 180));
+        titulo.setBounds(200, 50, 400, 50);
+        add(titulo);
         // Boton Idioma
         idioma = crearBoton("IDIOMA", new Color(255, 245, 202), new Color(255, 205, 0));
         idioma.setBounds(180, 170, 180, 50);
