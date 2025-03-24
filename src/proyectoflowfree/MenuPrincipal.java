@@ -151,14 +151,14 @@ public class MenuPrincipal extends JPanel {
     }
     
     private void cerrarSesion() {
-    Login.cerrarSesion(); 
-    Idioma.setIdiomaActual("es"); 
-    Idioma.setIdiomaActual("en");
+    Login.cerrarSesion();  // Guarda y limpia
+    JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+    frame.dispose();
+
     MenuInicio menu = new MenuInicio();
-    menu.mostrarEnFrame(); 
+    menu.mostrarEnFrame();
+    menu.actualizarIdioma();  // Refresca con el idioma actual (Español o Ingles)
 }
-
-
 
     @Override
     protected void paintComponent(Graphics g) {

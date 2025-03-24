@@ -60,8 +60,7 @@ public class MenuInicio extends JPanel {
     
     public void cambiarIdioma(String idioma){
         Idioma.setIdiomaActual(idioma);
-        MenuInicio menu=new MenuInicio();
-        menu.mostrarEnFrame();
+        actualizarIdioma();  
     }
 
     private JButton crearBoton(String texto, Color bgColor, Color fgColor) {

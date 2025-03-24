@@ -37,8 +37,8 @@ public class Configuracion extends JPanel {
 
     public Configuracion() {
         setLayout(null);
-        cargarIdioma(idiomaActual);
-        Idioma.setIdiomaActual("en");
+        //cargarIdioma(idiomaActual);
+        cargarIdioma(Idioma.getIdiomaActual());
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Configuracion.png")).getImage();
         JLabel titulo = new JLabel(mensajes.getProperty("configuracion_titulo", "CONFIGURACIÓN"), SwingConstants.CENTER);
@@ -301,7 +301,7 @@ public class Configuracion extends JPanel {
 
         if (seleccion == 1) {
             Idioma.setIdiomaActual("en");  // Guarda el idioma globalmente
-        } else {
+        } else if(seleccion==0){
             Idioma.setIdiomaActual("es");
         }
         cargarIdioma(Idioma.getIdiomaActual());
