@@ -11,7 +11,7 @@ import java.util.Properties;
  * @author laraj
  */
 public class Idioma {
-    private static String idiomaActual = "es"; 
+    private static String idiomaActual = "es"; // Idioma por defecto
 
     public static String getIdiomaActual() {
         return idiomaActual;
@@ -26,11 +26,16 @@ public class Idioma {
         try {
             String rutaArchivo = "/proyectoflowfree/idiomas/mensajes_" + idiomaActual + ".properties";
             InputStream archivo = Idioma.class.getResourceAsStream(rutaArchivo);
-            mensajes.load(archivo);
-            archivo.close();
+            if (archivo != null) {
+                mensajes.load(archivo);
+                archivo.close();
+            } else {
+                System.out.println("No se encontró el archivo de idioma.");
+            }
         } catch (Exception e) {
             System.out.println("Error al cargar el idioma: " + e.getMessage());
         }
         return mensajes;
     }
 }
+

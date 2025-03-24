@@ -23,6 +23,7 @@ public class Configuracion extends JPanel {
     private float volumenActual = 0f;
     private Properties mensajes = new Properties();
     private String idiomaActual = "es";
+    
 
     private JButton[] avatares;
     private String[] nombresAvatares = {"Rosado", "Azul", "Turquesa", "Amarillo", "Rojo", "Verde"};
@@ -38,7 +39,8 @@ public class Configuracion extends JPanel {
     public Configuracion() {
         setLayout(null);
         //cargarIdioma(idiomaActual);
-        cargarIdioma(Idioma.getIdiomaActual());
+        //cargarIdioma(Idioma.getIdiomaActual());
+        Properties mensajes = Idioma.getMensajes();
 
         fondoImagen = new ImageIcon(getClass().getResource("/imagenes/Configuracion.png")).getImage();
         JLabel titulo = new JLabel(mensajes.getProperty("configuracion_titulo", "CONFIGURACIÓN"), SwingConstants.CENTER);
@@ -47,49 +49,49 @@ public class Configuracion extends JPanel {
         titulo.setBounds(200, 90, 400, 50);
         add(titulo);
         // Boton Idioma
-        idioma = crearBoton("IDIOMA", new Color(255, 245, 202), new Color(255, 205, 0));
+        idioma = crearBoton(mensajes.getProperty("idioma"), new Color(255, 245, 202), new Color(255, 205, 0));
         idioma.setBounds(180, 170, 180, 50);
         idioma.addActionListener(e -> cambiarIdioma());
         add(idioma);
 
         // Boton Avatar
-        avatar = crearBoton("AVATAR", new Color(250, 201, 222), new Color(230, 31, 147));
+        avatar = crearBoton(mensajes.getProperty("avatar", "AVATAR"), new Color(250, 201, 222), new Color(230, 31, 147));
         avatar.setBounds(180, 240, 180, 50);
         avatar.addActionListener(e -> mostrarSeleccionAvatares());
         add(avatar);
 
         // Boton Eliminar Cuenta
-        eliminarCuenta = crearBoton("ELIMINAR CUENTA", new Color(247, 186, 186), new Color(255, 49, 49));
+        eliminarCuenta = crearBoton(mensajes.getProperty("eliminar_cuenta", "ELIMINAR CUENTA"), new Color(247, 186, 186), new Color(255, 49, 49));
         eliminarCuenta.setBounds(180, 310, 180, 50);
         eliminarCuenta.addActionListener(e -> eliminarCuenta());
         add(eliminarCuenta);
 
         // Boton Cambiar Nombre
-        cambiarNombre = crearBoton("CAMBIAR NOMBRE", new Color(251, 210, 255), new Color(199, 0, 255));
+        cambiarNombre = crearBoton(mensajes.getProperty("cambiar_nombre", "CAMBIAR NOMBRE"), new Color(251, 210, 255), new Color(199, 0, 255));
         cambiarNombre.setBounds(430, 170, 180, 50);
         cambiarNombre.addActionListener(e -> cambiarNombre());
         add(cambiarNombre);
 
         // Boton Cambiar Usuario
-        cambiarUsuario = crearBoton("CAMBIAR USUARIO", new Color(200, 255, 247), new Color(0, 183, 231));
+        cambiarUsuario = crearBoton(mensajes.getProperty("cambiar_usuario", "CAMBIAR USUARIO"), new Color(200, 255, 247), new Color(0, 183, 231));
         cambiarUsuario.setBounds(430, 240, 180, 50);
         cambiarUsuario.addActionListener(e -> cambiarUsuario());
         add(cambiarUsuario);
 
         // Boton Cambiar Contraseña
-        cambiarContra = crearBoton("CAMBIAR CONTRA", new Color(204, 255, 155), new Color(14, 184, 102));
+        cambiarContra = crearBoton(mensajes.getProperty("cambiar_contra", "CAMBIAR CONTRA"), new Color(204, 255, 155), new Color(14, 184, 102));
         cambiarContra.setBounds(430, 310, 180, 50);
         cambiarContra.addActionListener(e -> cambiarContraseña());
         add(cambiarContra);
 
         //boton volumen
-        volumen = crearBoton("VOLUMEN", new Color(255, 223, 160), new Color(255, 140, 0));
+        volumen = crearBoton(mensajes.getProperty("volumen", "VOLUMEN"), new Color(255, 223, 160), new Color(255, 140, 0));
         volumen.setBounds(310, 380, 180, 50);
         volumen.addActionListener(e -> mostrarControlDeVolumen());
         add(volumen);
 
         // Boton Regresar
-        regresar = crearBoton("REGRESAR", new Color(246, 176, 164), new Color(234, 89, 35));
+        regresar = crearBoton(mensajes.getProperty("regresar", "REGRESAR"), new Color(246, 176, 164), new Color(234, 89, 35));
         regresar.setBounds(460, 460, 180, 50);
         regresar.addActionListener(e -> regresar());
         add(regresar);
@@ -295,18 +297,28 @@ public class Configuracion extends JPanel {
     }
 
     private void cambiarIdioma() {
-        String[] opciones = {"Español", "English"};
-        int seleccion = JOptionPane.showOptionDialog(this, "Selecciona el idioma:", "Idioma",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
+    String[] opciones = {"Español", "English"};
+    int seleccion = JOptionPane.showOptionDialog(this, "Selecciona el idioma:", "Idioma",
+            JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
 
-        if (seleccion == 1) {
-            Idioma.setIdiomaActual("en");  // Guarda el idioma globalmente
-        } else if(seleccion==0){
-            Idioma.setIdiomaActual("es");
-        }
-        cargarIdioma(Idioma.getIdiomaActual());
-        actualizarTextos();
+    if (seleccion == 1) {
+        Idioma.setIdiomaActual("en");
+    } else if (seleccion == 0) {
+        Idioma.setIdiomaActual("es");
+    } else {
+        return; // Cancelado
     }
+
+    if (Login.usuarioLogueado != null) {
+        Login.usuarioLogueado.actualizarPreferencias("idioma", Idioma.getIdiomaActual());
+    }
+
+    JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+    frame.dispose();
+    new Configuracion().mostrarEnFrame();
+}
+
+
 
     private void actualizarTextos() {
         idioma.setText(mensajes.getProperty("idioma"));
